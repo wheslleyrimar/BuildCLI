@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Command(name = "buildcli", mixinStandardHelpOptions = true, version = "1.0.0",
+@Command(name = "BuildCLI", mixinStandardHelpOptions = true, version = "BuildCLI 0.0.1",
         description = "BuildCLI - A CLI for Java Project Management")
 public class BuildCLI implements Runnable {
 
