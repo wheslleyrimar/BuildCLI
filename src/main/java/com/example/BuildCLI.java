@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Command(name = "buildcli", mixinStandardHelpOptions = true, version = "1.0",
-        description = "BuildCLI - Um CLI para Gerenciamento de Projetos Java")
+@Command(name = "buildcli", mixinStandardHelpOptions = true, version = "1.0.0",
+        description = "BuildCLI - A CLI for Java Project Management")
 public class BuildCLI implements Runnable {
 
     @Option(names = {"-i", "--init"}, description = "Initialize a new Java Project")
@@ -48,7 +48,7 @@ public class BuildCLI implements Runnable {
             } else if (run) {
                 runProject();
             } else {
-                System.out.println("Bem-vindo ao BuildCLI - Gerenciamento de Projetos Java!");
+                System.out.println("Welcome to BuildCLI - Java Project Management!");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,22 +56,19 @@ public class BuildCLI implements Runnable {
     }
 
     private void initializeProject() throws IOException {
-        // Diretórios padrão do projeto
         String[] dirs = {"src/main/java", "src/main/resources", "src/test/java"};
         for (String dir : dirs) {
             File directory = new File(dir);
             if (directory.mkdirs()) {
-                System.out.println("Criado o diretório: " + dir);
+                System.out.println("Directory created: " + dir);
             }
         }
 
-        // Arquivo README.md
         File readme = new File("README.md");
         if (readme.createNewFile()) {
-            System.out.println("Arquivo README.md criado.");
+            System.out.println("README.md file created.");
         }
 
-        // Arquivo pom.xml com conteúdo básico (ou pode ser criado para build.gradle, se preferir)
         File pomFile = new File("pom.xml");
         if (pomFile.createNewFile()) {
             try (FileWriter writer = new FileWriter(pomFile)) {
@@ -83,7 +80,7 @@ public class BuildCLI implements Runnable {
                         "    <artifactId>BuildCLI</artifactId>\n" +
                         "    <version>1.0-SNAPSHOT</version>\n" +
                         "</project>");
-                System.out.println("Arquivo pom.xml criado.");
+                System.out.println("pom.xml file created.");
             }
         }
     }
@@ -102,7 +99,7 @@ public class BuildCLI implements Runnable {
     private void addDependencyToPom(String dependency) {
         String[] parts = dependency.split(":");
         if (parts.length != 2) {
-            System.out.println("Dependência inválida. Use o formato 'groupId:artifactId'");
+            System.out.println("Invalid dependency. Use the format 'groupId:artifactId'");
             return;
         }
 
@@ -119,9 +116,9 @@ public class BuildCLI implements Runnable {
             String pomContent = new String(Files.readAllBytes(Paths.get("pom.xml")));
             pomContent = pomContent.replace("</dependencies>", dependencyXml + "</dependencies>");
             Files.write(Paths.get("pom.xml"), pomContent.getBytes());
-            System.out.println("Dependência adicionada ao pom.xml.");
+            System.out.println("Dependency added to pom.xml.");
         } catch (IOException e) {
-            System.out.println("Erro ao adicionar dependência ao pom.xml");
+            System.out.println("Error adding dependency to pom.xml");
             e.printStackTrace();
         }
     }
@@ -131,9 +128,9 @@ public class BuildCLI implements Runnable {
         File file = new File(fileName);
         try {
             if (file.createNewFile()) {
-                System.out.println("Perfil de configuração criado: " + fileName);
+                System.out.println("Configuration profile created: " + fileName);
             } else {
-                System.out.println("O perfil já existe: " + fileName);
+                System.out.println("Profile already exists: " + fileName);
             }
         } catch (IOException e) {
             e.printStackTrace();

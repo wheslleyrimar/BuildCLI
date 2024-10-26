@@ -63,7 +63,7 @@ Options:
   -i, --init                Initializes a new Java project
   -c, --compile             Compiles the Java project
       --add-dependency      Adds a dependency to the pom.xml in the 'groupId:artifactId' format
-      --profile             Creates a configuration profile (e.g., dev, test)
+  -p, --profile             Creates a configuration profile (e.g., dev, test)
       --run                 Runs the Java project
   -h, --help                Shows help
   --version                 Shows the version of BuildCLI
