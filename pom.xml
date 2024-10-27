@@ -39,7 +39,7 @@
                             <transformers>
                                 <!-- Define a classe principal do JAR -->
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.example.BuildCLI</mainClass>
+                                    <mainClass>org.buildcli.BuildCLI</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
