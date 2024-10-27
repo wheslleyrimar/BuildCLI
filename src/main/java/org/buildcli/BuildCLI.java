@@ -3,6 +3,7 @@ package org.buildcli;
 import org.buildcli.core.ProjectCompiler;
 import org.buildcli.core.ProjectInitializer;
 import org.buildcli.core.ProjectRunner;
+import org.buildcli.utils.BuildCLIIntro;
 import org.buildcli.utils.PomUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -35,6 +36,7 @@ public class BuildCLI implements Runnable {
     @Override
     public void run() {
         try {
+            BuildCLIIntro.welcome();
             if (init) {
                 new ProjectInitializer().initializeProject();
             } else if (compile) {
