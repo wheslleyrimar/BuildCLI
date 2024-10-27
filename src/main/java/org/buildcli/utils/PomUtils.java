@@ -14,7 +14,7 @@ public class PomUtils {
         }
 
         String dependencyXml = String.format(
-                "    <dependency>\n" +
+                        "    <dependency>\n" +
                         "        <groupId>%s</groupId>\n" +
                         "        <artifactId>%s</artifactId>\n" +
                         "        <version>LATEST</version>\n" +
