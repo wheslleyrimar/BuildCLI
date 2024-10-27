@@ -3,13 +3,16 @@ package org.buildcli.utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PomUtils {
+    private static final Logger logger = Logger.getLogger(PomUtils.class.getName());
 
     public static void addDependencyToPom(String dependency) {
         String[] parts = dependency.split(":");
         if (parts.length != 2) {
-            System.out.println("Invalid dependency format. Use 'groupId:artifactId'.");
+            logger.warning("Invalid dependency format. Use 'groupId:artifactId'.");
             return;
         }
 
@@ -26,8 +29,7 @@ public class PomUtils {
             Files.write(Paths.get("pom.xml"), pomContent.getBytes());
             System.out.println("Dependency added to pom.xml.");
         } catch (IOException e) {
-            System.out.println("Error adding dependency to pom.xml.");
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Error adding dependency to pom.xml", e);
         }
     }
 }

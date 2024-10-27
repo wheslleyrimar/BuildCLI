@@ -1,8 +1,12 @@
 package org.buildcli.core;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProjectCompiler {
+
+    private static final Logger logger = Logger.getLogger(ProjectCompiler.class.getName());
 
     public void compileProject() {
         try {
@@ -11,7 +15,7 @@ public class ProjectCompiler {
             Process process = builder.start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to compile project", e);
         }
     }
 }

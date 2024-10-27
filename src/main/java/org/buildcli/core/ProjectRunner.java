@@ -1,8 +1,11 @@
 package org.buildcli.core;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProjectRunner {
+    private static final Logger logger = Logger.getLogger(ProjectRunner.class.getName());
 
     public void runProject() {
         try {
@@ -11,7 +14,7 @@ public class ProjectRunner {
             Process process = builder.start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Failed to run project", e);
         }
     }
 }
