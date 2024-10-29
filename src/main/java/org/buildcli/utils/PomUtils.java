@@ -7,7 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PomUtils {
+
     private static final Logger logger = Logger.getLogger(PomUtils.class.getName());
+    private static final String file = "pom.xml";
 
     public static void addDependencyToPom(String dependency) {
         String[] parts = dependency.split(":");
@@ -16,17 +18,20 @@ public class PomUtils {
             return;
         }
 
-        String dependencyXml = String.format(
-                        "    <dependency>\n" +
-                        "        <groupId>%s</groupId>\n" +
-                        "        <artifactId>%s</artifactId>\n" +
-                        "        <version>LATEST</version>\n" +
-                        "    </dependency>\n", parts[0], parts[1]);
+        String dependencyXml = """
+                                <--! Add by BuildCLI-->
+                                <dependency>
+                                    <groupId>%s</groupId>
+                                    <artifactId>%s</artifactId>
+                                    <version>LATEST</version>
+                                </dependency>
+                            </dependencies>\
+                        """.formatted(parts[0], parts[1]);
 
         try {
-            String pomContent = new String(Files.readAllBytes(Paths.get("pom.xml")));
-            pomContent = pomContent.replace("</dependencies>", dependencyXml + "</dependencies>");
-            Files.write(Paths.get("pom.xml"), pomContent.getBytes());
+            String pomContent = new String(Files.readAllBytes(Paths.get(file)));
+            pomContent = pomContent.replace("</dependencies>", dependencyXml);
+            Files.write(Paths.get(file), pomContent.getBytes());
             System.out.println("Dependency added to pom.xml.");
         } catch (IOException e) {
             logger.log(Level.SEVERE, "Error adding dependency to pom.xml", e);
