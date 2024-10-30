@@ -30,7 +30,7 @@ public class PomUtils {
             }
 
             dependencyXml.append( """
-                            <--! Add by BuildCLI-->
+                            <--! Added by BuildCLI-->
                             <dependency>
                                 <groupId>%s</groupId>
                                 <artifactId>%s</artifactId>
