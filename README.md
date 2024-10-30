@@ -62,7 +62,7 @@ Usage: buildcli [OPTIONS]
 Options:
   -i, --init                Initializes a new Java project
   -c, --compile             Compiles the Java project
-      --add-dependency      Adds a dependency to the pom.xml in the 'groupId:artifactId' format
+      --add-dependency      Adds a dependency to the pom.xml in the 'groupId:artifactId' or 'groupId:artifactId:version' format
   -p, --profile             Creates a configuration profile (e.g., dev, test)
       --run                 Runs the Java project
   -h, --help                Shows help
@@ -86,10 +86,18 @@ buildcli --compile
 ```
 
 ### 3. Add a Dependency to `pom.xml`
-Adds a dependency to the project in the `groupId:artifactId` format. Example to add `spring-core`:
+Adds a dependency to the project in the `groupId:artifactId` format. You can also specify a version using the format `groupId:artifactId:version`. If no version is specified, the dependency will default to the latest version available.
+
+#### Example Commands:
+- To add a dependency with the latest version:
 ```bash
-buildcli --add-dependency org.springframework:spring-core
+  buildcli --add-dependency org.springframework:spring-core
 ```
+- To add a dependency with a specified version:
+```bash
+  buildcli --add-dependency org.springframework:spring-core:5.3.21
+```
+After executing these commands, the dependency will be appended to your pom.xml file under the `<dependencies>` section.
 
 ### 4. Create a Configuration Profile
 Creates a configuration file with the specified profile, for example, `application-dev.properties`:
