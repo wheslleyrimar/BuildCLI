@@ -1,5 +1,7 @@
 package org.buildcli.core;
 
+import org.buildcli.utils.SystemCommands;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,7 +11,7 @@ public class ProjectRunner {
 
     public void runProject() {
         try {
-            ProcessBuilder builder = new ProcessBuilder("mvn", "spring-boot:run");
+            ProcessBuilder builder = new ProcessBuilder(SystemCommands.MVN.getCommand(), "spring-boot:run", "-q");
             builder.inheritIO();
             Process process = builder.start();
             process.waitFor();

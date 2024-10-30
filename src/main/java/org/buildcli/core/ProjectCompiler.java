@@ -1,5 +1,7 @@
 package org.buildcli.core;
 
+import org.buildcli.utils.SystemCommands;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,7 +12,7 @@ public class ProjectCompiler {
 
     public void compileProject() {
         try {
-            ProcessBuilder builder = new ProcessBuilder("mvn", "compile");
+            ProcessBuilder builder = new ProcessBuilder(SystemCommands.MVN.getCommand(), "compile");
             builder.inheritIO();
             Process process = builder.start();
             process.waitFor();
