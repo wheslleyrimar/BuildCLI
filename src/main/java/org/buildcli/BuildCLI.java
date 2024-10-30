@@ -19,7 +19,7 @@ public class BuildCLI implements Runnable {
     @Option(names = {"-c", "--compile"}, description = "Compile a Java Project")
     boolean compile;
 
-    @Option(names = {"--add-dependency"}, split = ",", description = "Add a dependency in 'groupId:artifactId' format")
+    @Option(names = {"--add-dependency"}, split = ",", description = "Add a dependency in 'groupId:artifactId' or 'groupId:artifactId:version' format")
     String[] dependency;
 
     @Option(names = {"-p", "--profile"}, description = "Create a configuration profile")
