@@ -22,6 +22,9 @@ public class BuildCLI implements Runnable {
     @Option(names = {"--add-dependency"}, split = ",", description = "Add a dependency in 'groupId:artifactId' or 'groupId:artifactId:version' format")
     String[] dependency;
 
+    @Option(names = {"--rm-dependency"}, split = ",", description = "Remove a dependency in 'groupId:artifactId' format")
+    String[] rmDependency;
+
     @Option(names = {"-p", "--profile"}, description = "Create a configuration profile")
     String profile;
 
@@ -43,6 +46,8 @@ public class BuildCLI implements Runnable {
                 new ProjectCompiler().compileProject();
             } else if (dependency != null) {
                 PomUtils.addDependencyToPom(dependency);
+            } else if (rmDependency != null) {
+                PomUtils.rmDependencyToPom(rmDependency);
             } else if (profile != null) {
                 ProjectInitializer.createProfileConfig(profile);
             } else if (run) {
