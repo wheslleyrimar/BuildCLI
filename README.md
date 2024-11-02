@@ -65,6 +65,7 @@ Options:
       --add-dependency      Adds a dependency to the pom.xml in the 'groupId:artifactId' or 'groupId:artifactId:version' format
   -p, --profile             Creates a configuration profile (e.g., dev, test)
       --run                 Runs the Java project
+  -d, --document            [Beta] Generates documentation for a Java file using AI (e.g., `buildcli -d <path-to-file>.java`)
   -h, --help                Shows help
   --version                 Shows the version of BuildCLI
 ```
@@ -111,7 +112,26 @@ Runs the Java project using Spring Boot:
 buildcli --run
 ```
 
+### 6. Generate Documentation for Java Code
+Automatically generates inline documentation for a Java file using AI:
+```bash
+buildcli --document File.java
+```
+This command sends the specified Java file to the local Ollama server, which generates documentation and comments directly within the code. The modified file with documentation will be saved back to the same location.
+
 ---
+
+## Prerequisites
+
+### Local Ollama API
+Ensure you have the Ollama server running locally, as the `--document` functionality relies on an AI model accessible via a local API.
+- [Download Ollama](https://ollama.com/download)
+
+You can start the Ollama server by running:
+
+```bash
+ollama run llama3.2
+```
 
 ## Contribution
 
