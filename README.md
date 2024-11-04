@@ -24,6 +24,8 @@
 - **Initialize Project**: Creates the basic structure of directories and files for a Java project.
 - **Compile Project**: Compiles the project source code using Maven.
 - **Add Dependency**: Adds new dependencies to the `pom.xml`.
+- **Remove Dependency**: Remove dependencies from `pom.xml`.
+- **Document Code**: [Beta] Generates documentation for a Java file using AI.
 - **Manage Configuration Profiles**: Creates specific configuration files for profiles (`application-dev.properties`, `application-test.properties`, etc.).
 - **Run Project**: Starts the project directly from the CLI using Spring Boot.
 
@@ -63,10 +65,12 @@ Options:
   -i, --init                Initializes a new Java project
   -c, --compile             Compiles the Java project
       --add-dependency      Adds a dependency to the pom.xml in the 'groupId:artifactId' or 'groupId:artifactId:version' format
+      --rm-dependency       Remove a dependency in 'groupId:artifactId' format
   -p, --profile             Creates a configuration profile (e.g., dev, test)
       --run                 Runs the Java project
+  -d, --document-code       [Beta] Generates documentation for a Java file using AI (e.g., `buildcli -d <path-to-file>.java`)
   -h, --help                Shows help
-  --version                 Shows the version of BuildCLI
+  -V, --version             Shows the version of BuildCLI
 ```
 
 ---
@@ -111,7 +115,26 @@ Runs the Java project using Spring Boot:
 buildcli --run
 ```
 
+### 6. Generate Documentation for Java Code
+Automatically generates inline documentation for a Java file using AI:
+```bash
+buildcli --document-code File.java
+```
+This command sends the specified Java file to the local Ollama server, which generates documentation and comments directly within the code. The modified file with documentation will be saved back to the same location.
+
 ---
+
+## Prerequisites
+
+### Local Ollama API
+Ensure you have the Ollama server running locally, as the `--document-code` functionality relies on an AI model accessible via a local API.
+- [Download Ollama](https://ollama.com/download)
+
+You can start the Ollama server by running:
+
+```bash
+ollama run llama3.2
+```
 
 ## Contribution
 
