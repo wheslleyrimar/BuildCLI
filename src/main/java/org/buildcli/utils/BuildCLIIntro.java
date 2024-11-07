@@ -1,5 +1,6 @@
 package org.buildcli.utils;
 
+import org.buildcli.log.SystemOutLogger;
 
 /*
 *
@@ -14,13 +15,14 @@ package org.buildcli.utils;
 * */
 public class BuildCLIIntro {
 
+	private BuildCLIIntro() { }
+	
     public static void welcome(){
-        System.out.println(",-----.          ,--.,--.   ,--. ,-----.,--.   ,--.");
-        System.out.println("|  |) /_ ,--.,--.`--'|  | ,-|  |'  .--./|  |   |  |");
-        System.out.println("|  .-.  \\|  ||  |,--.|  |' .-. ||  |    |  |   |  |       By Wheslley Rimar");
-        System.out.println("|  '--' /'  ''  '|  ||  |\\ `-' |'  '--'\\|  '--.|  |");
-        System.out.println("`------'  `----' `--'`--' `---'  `-----'`-----'`--'");
-        System.out.println("");
-
+    	SystemOutLogger.log(",-----.          ,--.,--.   ,--. ,-----.,--.   ,--.");
+    	SystemOutLogger.log("|  |) /_ ,--.,--.`--'|  | ,-|  |'  .--./|  |   |  |");
+    	SystemOutLogger.log("|  .-.  \\|  ||  |,--.|  |' .-. ||  |    |  |   |  |       By Wheslley Rimar");
+    	SystemOutLogger.log("|  '--' /'  ''  '|  ||  |\\ `-' |'  '--'\\|  '--.|  |");
+    	SystemOutLogger.log("`------'  `----' `--'`--' `---'  `-----'`-----'`--'");
+    	SystemOutLogger.log("");
     }
 }

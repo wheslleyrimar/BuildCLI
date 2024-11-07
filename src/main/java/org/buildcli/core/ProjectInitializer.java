@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.buildcli.log.SystemOutLogger;
+
 public class ProjectInitializer {
 
     public void initializeProject() throws IOException {
@@ -11,7 +13,7 @@ public class ProjectInitializer {
         for (String dir : dirs) {
             File directory = new File(dir);
             if (directory.mkdirs()) {
-                System.out.println("Directory created: " + dir);
+            	SystemOutLogger.log("Directory created: " + dir);
             }
         }
 
@@ -23,7 +25,7 @@ public class ProjectInitializer {
     private void createReadme() throws IOException {
         File readme = new File("README.md");
         if (readme.createNewFile()) {
-            System.out.println("README.md file created.");
+        	SystemOutLogger.log("README.md file created.");
         }
     }
 
@@ -42,7 +44,7 @@ public class ProjectInitializer {
                                 System.out.println("Hello, World!");
                             }
                         }""");
-                System.out.println("Main.java file created with package and basic content.");
+                SystemOutLogger.log("Main.java file created with package and basic content.");
             }
         }
     }
@@ -120,7 +122,7 @@ public class ProjectInitializer {
                                 </plugins>
                             </build>
                         </project>""");
-                System.out.println("pom.xml file created with default configuration.");
+                SystemOutLogger.log("pom.xml file created with default configuration.");
             }
         }
     }
@@ -129,7 +131,7 @@ public class ProjectInitializer {
         String fileName = "src/main/resources/application-" + profile + ".properties";
         try {
             if (new File(fileName).createNewFile()) {
-                System.out.println("Configuration profile created: " + fileName);
+            	SystemOutLogger.log("Configuration profile created: " + fileName);
             }
         } catch (IOException e) {
             e.printStackTrace();

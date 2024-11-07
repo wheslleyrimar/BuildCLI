@@ -17,6 +17,7 @@ public class ProjectRunner {
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             logger.log(Level.SEVERE, "Failed to run project", e);
+            Thread.currentThread().interrupt();
         }
     }
 }
