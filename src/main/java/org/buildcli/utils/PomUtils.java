@@ -9,8 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import org.buildcli.exception.ExtractionRuntimeException;
 import org.buildcli.log.SystemOutLogger;
@@ -25,41 +27,49 @@ public class PomUtils {
 
     private PomUtils() { }
     
-    public static void addDependencyToPom(String[] dependency) {
-        extractPomFile();
-        for(String d : dependency)
-            pom.addDependency(d);
-        try {
+    public static Pom addDependencyToPom(String pomPath, String[] dependencies) {
+    	extractPomFile(Optional.of(pomPath));
+    	Stream.of(dependencies).forEach(pom::addDependency);
+        return pom;
+    }
+    
+    public static void addDependencyToPom(String[] dependencies) {
+        extractPomFile(Optional.empty());
+        Stream.of(dependencies).forEach(pom::addDependency);
+        applyChangesToPom("Dependency added to pom.xml.", "Error adding dependency to pom.xml");
+    }
+    
+    public static Pom rmDependencyToPom(String pomPath, String[] dependencies) {
+    	extractPomFile(Optional.of(pomPath));
+    	Stream.of(dependencies).forEach(pom::rmDependency);
+        return pom;
+    }
+    
+    public static void rmDependencyToPom(String[] dependencies) {
+        extractPomFile(Optional.empty());
+        Stream.of(dependencies).forEach(pom::rmDependency);
+        applyChangesToPom("Dependency removed from pom.xml.", "Error removing dependency from pom.xml");
+    }
+
+    private static void applyChangesToPom(String successMessage, String failureMessage) {
+    	
+    	try {
             String pomContent = pomData.toString()
                     .replace(DEPENDENCIES_PATTERN, pom.getDependencyFormatted());
             Files.write(Paths.get(FILE), pomContent.getBytes());
-            SystemOutLogger.log("Dependency added to pom.xml.");
+            SystemOutLogger.log(successMessage);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error adding dependency to pom.xml", e);
+            logger.log(Level.SEVERE, failureMessage, e);
         }
     }
-
-    public static void rmDependencyToPom(String[] rmDependency) {
-        extractPomFile();
-        for(String d : rmDependency)
-            pom.rmDependency(d);
-
-        try {
-            String pomContent = pomData.toString()
-                    .replace(DEPENDENCIES_PATTERN, pom.getDependencyFormatted());
-            Files.write(Paths.get(FILE), pomContent.getBytes());
-            SystemOutLogger.log("Dependency removed from pom.xml.");
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error adding dependency to pom.xml", e);
-        }
-    }
-
-    private static void extractPomFile(){
+    
+    private static void extractPomFile(Optional<String> pomPath){
+    	
         Pom newPom = new Pom();
 
         StringBuilder newPomData = new StringBuilder();
 
-        File pomFile = new File(Paths.get(FILE).toFile().getAbsolutePath());
+        File pomFile = new File(Paths.get(pomPath.isPresent() ? pomPath.get() : FILE).toFile().getAbsolutePath());
         try(Reader reader = new FileReader(pomFile);
             BufferedReader br = new BufferedReader(reader)) {
 
