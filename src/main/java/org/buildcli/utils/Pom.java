@@ -98,12 +98,12 @@ public class Pom {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        dependencies.forEach(dependency -> {sb.append(dependency.getGroupId())
+        dependencies.forEach(dependency -> sb.append(dependency.getGroupId())
                 .append(":")
                 .append(dependency.getArtifactId())
                 .append(":")
                 .append(dependency.getVersion())
-                .append(",");});
+                .append(","));
         sb.append("]");
         return sb.toString();
     }
