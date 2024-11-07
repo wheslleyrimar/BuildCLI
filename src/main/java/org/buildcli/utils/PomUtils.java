@@ -10,12 +10,14 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.buildcli.exception.ExtractionRuntimeException;
 import org.buildcli.log.SystemOutLogger;
+import org.buildcli.model.DependencyHashMap;
 
 public class PomUtils {
 
@@ -69,62 +71,54 @@ public class PomUtils {
 
         StringBuilder newPomData = new StringBuilder();
 
-        File pomFile = new File(Paths.get(pomPath.isPresent() ? pomPath.get() : FILE).toFile().getAbsolutePath());
-        try(Reader reader = new FileReader(pomFile);
-            BufferedReader br = new BufferedReader(reader)) {
+        File pomFile = new File(Paths.get(pomPath.isPresent() ? pomPath.get() : FILE)
+        		.toFile().getAbsolutePath());
+        
+        try (var reader = new FileReader(pomFile); var br = new BufferedReader(reader)) {
 
-            while(br.ready()) {
+            while (br.ready()) {
+            	
                 String readLine = br.readLine();
-                if(readLine.contains("<dependencies>")) {
+                
+                if (readLine.contains("<dependencyManagement>")) {
+                	do {
+                		readLine = br.readLine();
+                	} while (!readLine.contains("</dependencyManagement>"));
+                }
+                
+                if (readLine.contains("<dependencies>")) {
+                	
                     String line = br.readLine();
-                    while(!line.contains("</dependencies>")) {
-                        if(line.contains("<dependency>")) {
-                            Map<String,String> dependency = new HashMap<>();
-                            while(!line.contains("</dependency>")) {
-                                line = br.readLine();
-                                if(line.contains("<groupId>")) {
-                                    dependency.put("groupId",
-                                            line.replace("<groupId>", "")
-                                                    .replace("</groupId>", "")
-                                                    .strip());
-                                    continue;
-                                }
-                                if(line.contains("<artifactId>")) {
-                                    dependency.put("artifactId",
-                                            line.replace("<artifactId>", "")
-                                                    .replace("</artifactId>", "")
-                                                    .strip());
-                                    continue;
-                                }
-                                if(line.contains("<version>")) {
-                                    dependency.put("version", line.replace("<version>", "")
-                                            .replace("</version>", "")
-                                            .strip());
-                                    continue;
-                                }
-                                if(line.contains("<type>")) {
-                                    dependency.put("type", line.replace("<type>", "")
-                                            .replace("</type>", "")
-                                            .strip());
-                                    continue;
-                                }
-                                if(line.contains("<scope>")) {
-                                    dependency.put("scope", line.replace("<scope>", "")
-                                            .replace("</scope>", "")
-                                            .strip());
-                                    continue;
-                                }
-                                if(line.contains("<optional>"))
-                                    dependency.put("optional", line.replace("<optional>", "")
-                                            .replace("</optional>", "")
-                                            .strip());
+                    
+                    while (!line.contains("</dependencies>")) {
+                    	
+                        if (line.contains("<dependency>")) {
+                        	
+                            var dependency = new DependencyHashMap();
+                            
+                            while (!line.contains("</dependency>")) {
+                            	
+                            	String element = br.readLine();
+                            	
+                            	Consumer<String> addElementToDependency = e ->
+                            		dependency.put(e, element.replace(String.format("<%s>", e), "")
+                            				.replace(String.format("</%s>", e), "").strip());
+                            		
+                                dependency.keySet().stream()
+                                	.filter(k -> element.contains(String.format("<%s>", k)))
+                                	.findFirst()
+                                	.ifPresent(addElementToDependency);
+                                
+                                line = element;
                             }
+                            
                             newPom.addDependencyFile(dependency.get("groupId"),dependency.get("artifactId"),
                                     dependency.get("version"), dependency.get("type"), dependency.get("scope"),
                                     dependency.get("optional"));
                             line = br.readLine();
-                        } else
+                        } else {
                             line = br.readLine();
+                        }
                     }
                     newPomData.append(DEPENDENCIES_PATTERN).append(System.lineSeparator());
                 } else

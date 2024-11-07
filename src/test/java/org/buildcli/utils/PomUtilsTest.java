@@ -14,6 +14,7 @@ class PomUtilsTest {
 		var artifactId = "picocli";
 		var changedPom = PomUtils.rmDependencyToPom("src/test/resources/pom-utils-test/pom.xml", 
 				new String[]{ groupId.concat(":").concat(artifactId) });
+//		PomUtils.rmDependencyToPom(new String[]{ groupId.concat(":").concat(artifactId) });
 		assertFalse(changedPom.hasDependency(groupId, artifactId));
 		assertEquals(2, changedPom.countDependencies());
 		assertFalse(changedPom.hasDependency("org.junit", "junit-bom"));
