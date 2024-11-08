@@ -6,6 +6,7 @@ import org.buildcli.core.ProjectRunner;
 import org.buildcli.log.SystemOutLogger;
 import org.buildcli.utils.BuildCLIIntro;
 import org.buildcli.utils.CodeDocumenter;
+import org.buildcli.utils.EnvironmentConfigManager;
 import org.buildcli.utils.PomUtils;
 
 import picocli.CommandLine;
@@ -30,6 +31,9 @@ public class BuildCLI implements Runnable {
 
     @Option(names = {"-p", "--profile"}, description = "Create a configuration profile")
     String profile;
+
+    @Option(names = {"-e", "--set-environment"}, description = "Set the environment for the project (e.g., dev, test, prod)")
+    String environment;
 
     @Option(names = {"--run"}, description = "Run the Java Project")
     boolean run;
@@ -56,6 +60,8 @@ public class BuildCLI implements Runnable {
                 PomUtils.rmDependencyToPom(rmDependency);
             } else if (profile != null) {
                 ProjectInitializer.createProfileConfig(profile);
+            } else if (environment != null) {
+                EnvironmentConfigManager.setEnvironment(environment);
             } else if (fileToDocument != null) {
                 CodeDocumenter.getDocumentationFromOllama(fileToDocument);
             } else if (run) {

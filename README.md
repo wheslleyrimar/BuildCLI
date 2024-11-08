@@ -67,6 +67,7 @@ Options:
       --add-dependency      Adds a dependency to the pom.xml in the 'groupId:artifactId' or 'groupId:artifactId:version' format
       --rm-dependency       Remove a dependency in 'groupId:artifactId' format
   -p, --profile             Creates a configuration profile (e.g., dev, test)
+      --set-environment     Sets the active profile for the environment (dev, test, prod) by updating `environment.config`
       --run                 Runs the Java project
   -d, --document-code       [Beta] Generates documentation for a Java file using AI (e.g., `buildcli -d <path-to-file>.java`)
   -h, --help                Shows help
@@ -122,6 +123,16 @@ buildcli --document-code File.java
 ```
 This command sends the specified Java file to the local Ollama server, which generates documentation and comments directly within the code. The modified file with documentation will be saved back to the same location.
 
+### 7. Set Active Environment Profile
+Sets the active environment profile, saving it to the `environment.config` file. The profile is referenced during project execution, ensuring that the correct configuration is loaded.
+```bash
+buildcli --set-environment dev
+```
+After running this command, the active profile is set to dev, and the `environment.config` file is updated accordingly.
+
+#### Active Profile Display During Project Execution
+With the `--set-environment` functionality, you can set the active environment profile. When running the project with `buildcli --run`, the active profile will be displayed in the terminal.
+
 ---
 
 ## Prerequisites
@@ -144,7 +155,7 @@ To contribute:
 1. Fork the project.
 2. Create a branch for your changes:
    ```bash
-   git checkout -b my-feature
+   git checkout -b feature/my-feature
    ```
 3. Commit your changes:
    ```bash
@@ -152,7 +163,7 @@ To contribute:
    ```
 4. Push to your branch:
    ```bash
-   git push origin my-feature
+   git push origin feature/my-feature
    ```
 5. Open a Pull Request in the main repository.
 

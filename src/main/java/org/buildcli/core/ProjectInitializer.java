@@ -38,7 +38,7 @@ public class ProjectInitializer {
             try (FileWriter writer = new FileWriter(javaClass)) {
                 writer.write("""
                         package org.buildcli;
-                        
+
                         public class Main {
                             public static void main(String[] args) {
                                 System.out.println("Hello, World!");
@@ -53,85 +53,126 @@ public class ProjectInitializer {
         File pomFile = new File("pom.xml");
         if (pomFile.createNewFile()) {
             try (FileWriter writer = new FileWriter(pomFile)) {
-                writer.write("""                        
-                        <project xmlns="http://maven.apache.org/POM/4.0.0"
-                                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://www.apache.org/xsd/maven-4.0.0.xsd">
-                            <modelVersion>4.0.0</modelVersion>
-                        
-                            <groupId>com.example</groupId>
-                            <artifactId>GeneratedApp</artifactId>
-                            <version>1.0-SNAPSHOT</version>
-                        
-                            <!-- Propriedades do projeto -->
-                            <properties>
-                                <maven.compiler.source>17</maven.compiler.source>
-                                <maven.compiler.target>17</maven.compiler.target>
-                                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-                            </properties>
-                        
-                            <!-- Dependências do projeto -->
-                            <dependencies>
-                                <!-- Dependência para JUnit 5 (para testes) -->
-                                <dependency>
-                                    <groupId>org.junit.jupiter</groupId>
-                                    <artifactId>junit-jupiter-engine</artifactId>
-                                    <version>5.8.1</version>
-                                    <scope>test</scope>
-                                </dependency>
-                            </dependencies>
-                        
-                            <!-- Plugins do projeto -->
-                            <build>
-                                <plugins>
-                                    <!-- Plugin para configurar a versão do Java -->
-                                    <plugin>
-                                        <groupId>org.apache.maven.plugins</groupId>
-                                        <artifactId>maven-compiler-plugin</artifactId>
-                                        <version>3.8.1</version>
-                                        <configuration>
-                                            <source>${maven.compiler.source}</source>
-                                            <target>${maven.compiler.target}</target>
-                                        </configuration>
-                                    </plugin>
-                        """ +
+                writer.write("""
+                            <project xmlns="http://maven.apache.org/POM/4.0.0"
+                                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://www.apache.org/xsd/maven-4.0.0.xsd">
+                                <modelVersion>4.0.0</modelVersion>
 
-                        // Descomente a opção desejada abaixo (Spring Boot ou Exec Maven Plugin)
-                        // Opção 1: Plugin do Spring Boot
-                        """
-                                    <plugin>
-                                        <groupId>org.springframework.boot</groupId>
-                                        <artifactId>spring-boot-maven-plugin</artifactId>
-                                        <version>3.0.0</version>
-                                    </plugin>
-                        """ +
-                        // Opção 2: Plugin Exec Maven para rodar projetos Java genéricos
-                        /*
-                        """
-                                    <plugin>
-                                        <groupId>org.codehaus.mojo</groupId>
-                                        <artifactId>exec-maven-plugin</artifactId>
-                                        <version>3.0.0</version>
-                                        <configuration>
-                                            <mainClass>com.example.Main</mainClass>
-                                        </configuration>
-                                    </plugin>
-                        """ +
-                        */
-                        """
-                                </plugins>
-                            </build>
-                        </project>""");
+                                <groupId>com.example</groupId>
+                                <artifactId>GeneratedApp</artifactId>
+                                <version>1.0-SNAPSHOT</version>
+
+                                <!-- Propriedades do projeto -->
+                                <properties>
+                                    <maven.compiler.source>17</maven.compiler.source>
+                                    <maven.compiler.target>17</maven.compiler.target>
+                                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                                </properties>
+
+                                <!-- Dependências do projeto -->
+                                <dependencies>
+                                    <!-- Dependência para JUnit 5 (para testes) -->
+                                    <dependency>
+                                        <groupId>org.junit.jupiter</groupId>
+                                        <artifactId>junit-jupiter-engine</artifactId>
+                                        <version>5.8.1</version>
+                                        <scope>test</scope>
+                                    </dependency>
+                                </dependencies>
+
+                                <!-- Plugins do projeto -->
+                                <build>
+                                    <plugins>
+                                        <!-- Plugin para configurar a versão do Java -->
+                                        <plugin>
+                                            <groupId>org.apache.maven.plugins</groupId>
+                                            <artifactId>maven-compiler-plugin</artifactId>
+                                            <version>3.8.1</version>
+                                            <configuration>
+                                                <source>${maven.compiler.source}</source>
+                                                <target>${maven.compiler.target}</target>
+                                            </configuration>
+                                        </plugin>
+                            """ +
+
+                            // Descomente a opção desejada abaixo (Spring Boot ou Exec Maven Plugin)
+                            // Opção 1: Plugin do Spring Boot
+                            """
+                                        <plugin>
+                                            <groupId>org.springframework.boot</groupId>
+                                            <artifactId>spring-boot-maven-plugin</artifactId>
+                                            <version>3.0.0</version>
+                                        </plugin>
+                            """ +
+                            // Opção 2: Plugin Exec Maven para rodar projetos Java genéricos
+                            /*
+                            """
+                                        <plugin>
+                                            <groupId>org.codehaus.mojo</groupId>
+                                            <artifactId>exec-maven-plugin</artifactId>
+                                            <version>3.0.0</version>
+                                            <configuration>
+                                                <mainClass>com.example.Main</mainClass>
+                                            </configuration>
+                                        </plugin>
+                            """ +
+                            */
+                            """
+                                    </plugins>
+                                </build>
+                                <profiles>
+                                    <profile>
+                                        <id>dev</id>
+                                        <properties>
+                                            <spring.profiles.active>dev</spring.profiles.active>
+                                        </properties>
+                                    </profile>
+
+                                    <profile>
+                                        <id>test</id>
+                                        <properties>
+                                            <spring.profiles.active>test</spring.profiles.active>
+                                        </properties>
+                                    </profile>
+
+                                    <profile>
+                                        <id>prod</id>
+                                        <properties>
+                                            <spring.profiles.active>prod</spring.profiles.active>
+                                        </properties>
+                                    </profile>
+                                </profiles>
+                            </project>""");
                 SystemOutLogger.log("pom.xml file created with default configuration.");
             }
         }
     }
 
+    /**
+     * Creates a configuration file for the specified profile with predefined content.
+     *
+     * @param profile the name of the profile (e.g., dev, prod, test)
+     */
     public static void createProfileConfig(String profile) {
         String fileName = "src/main/resources/application-" + profile + ".properties";
+        File profileFile = new File(fileName);
+
+        String content = """
+                # Configurações do perfil de %s
+                app.name=BuildCLI %s Environment
+                app.message=Running in %s Mode
+                logging.level=DEBUG
+                """.formatted(profile, profile, profile);
+
         try {
-            if (new File(fileName).createNewFile()) {
-            	SystemOutLogger.log("Configuration profile created: " + fileName);
+            if (profileFile.createNewFile()) {
+                try (FileWriter writer = new FileWriter(profileFile)) {
+                    writer.write(content);
+                }
+                System.out.println("Configuration profile created: " + fileName);
+            } else {
+                System.out.println("Configuration profile already exists: " + fileName);
             }
         } catch (IOException e) {
             e.printStackTrace();
