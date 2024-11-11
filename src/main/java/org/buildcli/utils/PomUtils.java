@@ -4,20 +4,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.transform.stream.StreamSource;
+
 import org.buildcli.exception.ExtractionRuntimeException;
 import org.buildcli.log.SystemOutLogger;
-import org.buildcli.model.DependencyHashMap;
+import org.buildcli.model.Pom;
+
+import jakarta.xml.bind.JAXBContext;
 
 public class PomUtils {
 
@@ -65,70 +66,50 @@ public class PomUtils {
         }
     }
     
-    private static void extractPomFile(Optional<String> pomPath){
+    
+    private static void extractPomFile(Optional<String> pomPath) {
     	
-        Pom newPom = new Pom();
-
-        StringBuilder newPomData = new StringBuilder();
-
-        File pomFile = new File(Paths.get(pomPath.isPresent() ? pomPath.get() : FILE)
+    	var pomFile = new File(Paths.get(pomPath.isPresent() ? pomPath.get() : FILE)
         		.toFile().getAbsolutePath());
-        
-        try (var reader = new FileReader(pomFile); var br = new BufferedReader(reader)) {
-
+    	
+    	try (var reader = new FileReader(pomFile); var br = new BufferedReader(reader)) {
+    		
+			var unmarshaller = JAXBContext.newInstance(Pom.class).createUnmarshaller();
+			 // Set up XML input with namespace filtering
+	        var xmlInputFactory = XMLInputFactory.newFactory();
+	        xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false); // prevent XXE attack
+	        var filter = new NamespaceFilter(xmlInputFactory.createXMLStreamReader(new StreamSource(pomFile)));
+	        pom = unmarshaller.unmarshal(filter, Pom.class).getValue();
+			
+			var newPomData = new StringBuilder();
+				
             while (br.ready()) {
             	
-                String readLine = br.readLine();
-                
-                if (readLine.contains("<dependencyManagement>")) {
+            	String readLine = br.readLine();
+            	
+            	if (readLine.contains("<dependencyManagement>")) {
                 	do {
+                		newPomData.append(readLine).append(System.lineSeparator());
                 		readLine = br.readLine();
                 	} while (!readLine.contains("</dependencyManagement>"));
                 }
-                
-                if (readLine.contains("<dependencies>")) {
-                	
-                    String line = br.readLine();
+            	
+            	if (readLine.contains("<dependencies>")) {
+            		
+            		do {
+            			readLine = br.readLine();
+            		} while (!readLine.contains("</dependencies>"));
                     
-                    while (!line.contains("</dependencies>")) {
-                    	
-                        if (line.contains("<dependency>")) {
-                        	
-                            var dependency = new DependencyHashMap();
-                            
-                            while (!line.contains("</dependency>")) {
-                            	
-                            	String element = br.readLine();
-                            	
-                            	Consumer<String> addElementToDependency = e ->
-                            		dependency.put(e, element.replace(String.format("<%s>", e), "")
-                            				.replace(String.format("</%s>", e), "").strip());
-                            		
-                                dependency.keySet().stream()
-                                	.filter(k -> element.contains(String.format("<%s>", k)))
-                                	.findFirst()
-                                	.ifPresent(addElementToDependency);
-                                
-                                line = element;
-                            }
-                            
-                            newPom.addDependencyFile(dependency.get("groupId"),dependency.get("artifactId"),
-                                    dependency.get("version"), dependency.get("type"), dependency.get("scope"),
-                                    dependency.get("optional"));
-                            line = br.readLine();
-                        } else {
-                            line = br.readLine();
-                        }
-                    }
                     newPomData.append(DEPENDENCIES_PATTERN).append(System.lineSeparator());
-                } else
+            	} else {
                     newPomData.append(readLine).append(System.lineSeparator());
+                }
             }
-        } catch (Exception e) {
-            throw new ExtractionRuntimeException(e);
-        }
+            
+            pomData = newPomData;
 
-        pomData = newPomData;
-        pom = newPom;
+		} catch (Exception e) {
+			throw new ExtractionRuntimeException(e);
+		}
     }
 }

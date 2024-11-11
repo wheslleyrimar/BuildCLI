@@ -1,6 +1,13 @@
-package org.buildcli.utils;
+package org.buildcli.model;
 
-public class Dependency{
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "dependency")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Dependency {
+
     private String groupId;
     private String artifactId;
     private String version;
@@ -8,6 +15,8 @@ public class Dependency{
     private String scope;
     private String optional;
 
+    public Dependency() { }
+    
     public Dependency(String groupId, String artifactId, String version) {
         this.groupId = groupId;
         this.artifactId = artifactId;
