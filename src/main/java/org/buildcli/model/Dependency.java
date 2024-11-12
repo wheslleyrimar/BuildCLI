@@ -8,6 +8,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Dependency {
 
+	public static final String XML_WRAPPER_ELEMENT = "dependencies";
+	
     private String groupId;
     private String artifactId;
     private String version;
