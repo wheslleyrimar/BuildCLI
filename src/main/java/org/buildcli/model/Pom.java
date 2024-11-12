@@ -16,6 +16,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class Pom {
 	
 	private static final Logger logger = Logger.getLogger(Pom.class.getName());
+	public static final String XML_ELEMENT = "project";
 
 	@XmlElementWrapper
 	@XmlElement(name = "dependency")
