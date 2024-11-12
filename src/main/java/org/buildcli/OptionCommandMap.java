@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.buildcli.core.ProjectCompiler;
 import org.buildcli.core.ProjectInitializer;
 import org.buildcli.core.ProjectRunner;
+import org.buildcli.core.ProjectUpdater;
 import org.buildcli.exception.ThrowingComandExecutorWrapper;
 import org.buildcli.utils.CodeDocumenter;
 import org.buildcli.utils.PomUtils;
@@ -29,6 +30,8 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("--run", () -> new ProjectRunner().runProject());
 		this.put("-d", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));
 		this.put("--document-code", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));
+		this.put("-u", () -> new ProjectUpdater().execute());
+		this.put("--update", () -> new ProjectUpdater().execute());
 	}
 	
 }
