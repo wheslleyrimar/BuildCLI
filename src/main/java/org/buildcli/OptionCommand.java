@@ -1,8 +1,8 @@
 package org.buildcli;
 
+import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
-import picocli.CommandLine.Model.CommandSpec;
 
 public class OptionCommand {
 
@@ -30,6 +30,11 @@ public class OptionCommand {
     @Option(names = {"-d", "--document-code"}, description = "Automatically document the Java code in the specified file")
     String fileToDocument;
     
-    @Option(names = {"-u", "--updates"}, description = "Check for dependency updates")
-    boolean updates;
+    @Option(names = {"-u", "--update"}, description = "Check for dependency updates")
+    boolean update;
+
+    @Option(names = {"--update-now"}, description = "Update dependencies to latest versions")
+    boolean updateNow;
 }
+
+

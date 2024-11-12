@@ -32,6 +32,7 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("--document-code", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));
 		this.put("-u", () -> new ProjectUpdater().execute());
 		this.put("--update", () -> new ProjectUpdater().execute());
+		this.put("--update-now", () -> new ProjectUpdater().updateNow(true).execute());
 	}
 	
 }
