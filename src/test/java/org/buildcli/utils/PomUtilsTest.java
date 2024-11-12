@@ -38,4 +38,14 @@ class PomUtilsTest {
 		assertTrue(changedPom.hasDependency(groupId, artifactId));
 		assertEquals(4, changedPom.countDependencies());
 	}
+	
+	@Test
+	void shouldAddDependencyToNonDependenciesPom() {
+		var groupId = "org.hibernate";
+		var artifactId = "hibernate-core";
+		var changedPom = PomUtils.addDependencyToPom("src/test/resources/pom-utils-test/non-dependencies-pom.xml", 
+				new String[]{ groupId.concat(":").concat(artifactId) });
+		assertTrue(changedPom.hasDependency(groupId, artifactId));
+		assertEquals(1, changedPom.countDependencies());
+	}
 }
