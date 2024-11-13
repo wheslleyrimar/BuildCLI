@@ -1,13 +1,30 @@
-package org.buildcli.utils;
+package org.buildcli.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
-public class Pom {
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-    private final List<Dependency> dependencies = new ArrayList<>();
-    private static final Logger logger = Logger.getLogger(Pom.class.getName());
+@XmlRootElement(name = "project")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Pom {
+	
+	private static final Logger logger = Logger.getLogger(Pom.class.getName());
+	public static final String XML_ELEMENT = "project";
+
+	@XmlElementWrapper
+	@XmlElement(name = "dependency")
+    private final List<Dependency> dependencies;
+    
+    public Pom() {
+    	this.dependencies = new ArrayList<>();
+    }
 
     public void addDependency(String dependency) {
         String[] parts = dependency.split(":");
@@ -25,7 +42,7 @@ public class Pom {
         }
     }
 
-    void addDependency(String groupId, String artifactId, String version) {
+    public void addDependency(String groupId, String artifactId, String version) {
         dependencies.stream()
                 .filter(d -> d.getArtifactId()
                         .equals(artifactId) && d.getGroupId().equals(groupId))
@@ -34,11 +51,11 @@ public class Pom {
                         () -> dependencies.add(new Dependency(groupId, artifactId, version)));
     }
 
-    void addDependency(String groupId, String artifactId) {
+    public void addDependency(String groupId, String artifactId) {
         addDependency(groupId, artifactId, "LATEST");
     }
 
-    void addDependencyFile(String groupId, String artifactId, String version, String type, String scope, String optional) {
+    public void addDependencyFile(String groupId, String artifactId, String version, String type, String scope, String optional) {
         dependencies.add(new Dependency(groupId, artifactId, version, type, scope, optional));
     }
 
@@ -66,13 +83,24 @@ public class Pom {
                                 <dependencies>
                             """);
         for (Dependency dependency : dependencies) {
-            result.append( """
+        	
+        	if (Objects.isNull(dependency.getVersion()) || dependency.getVersion().isBlank()) {
+        		result.append( """
+                        <!-- Added by BuildCLI-->
+                        <dependency>
+                            <groupId>%s</groupId>
+                            <artifactId>%s</artifactId>
+                """.formatted(dependency.getGroupId(), dependency.getArtifactId()));
+        	} else {
+        		result.append( """
                             <!-- Added by BuildCLI-->
                             <dependency>
                                 <groupId>%s</groupId>
                                 <artifactId>%s</artifactId>
                                 <version>%s</version>
                     """.formatted(dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion()));
+        	}
+            
             if(dependency.getType() != null)
                 result.append("""
                                     <type>%s</type>
@@ -95,15 +123,24 @@ public class Pom {
         return result.toString();
     }
 
-    @Override
+    public boolean hasDependency(String groupId, String artifactId) {
+    	return this.dependencies.stream()
+    			.anyMatch(d -> d.getGroupId().equals(groupId) && d.getArtifactId().equals(artifactId));
+    }
+    
+    public int countDependencies() {
+    	return this.dependencies.size();
+    }
+    
+	@Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        dependencies.forEach(dependency -> {sb.append(dependency.getGroupId())
+        dependencies.forEach(dependency -> sb.append(dependency.getGroupId())
                 .append(":")
                 .append(dependency.getArtifactId())
                 .append(":")
                 .append(dependency.getVersion())
-                .append(",");});
+                .append(","));
         sb.append("]");
         return sb.toString();
     }

@@ -18,6 +18,7 @@ public class ProjectCompiler {
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             logger.log(Level.SEVERE, "Failed to compile project", e);
+            Thread.currentThread().interrupt();
         }
     }
 }

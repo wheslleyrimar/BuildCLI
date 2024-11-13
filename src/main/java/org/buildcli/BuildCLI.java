@@ -3,9 +3,11 @@ package org.buildcli;
 import org.buildcli.core.ProjectCompiler;
 import org.buildcli.core.ProjectInitializer;
 import org.buildcli.core.ProjectRunner;
+import org.buildcli.log.SystemOutLogger;
 import org.buildcli.utils.BuildCLIIntro;
 import org.buildcli.utils.CodeDocumenter;
 import org.buildcli.utils.PomUtils;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -59,7 +61,7 @@ public class BuildCLI implements Runnable {
             } else if (run) {
                 new ProjectRunner().runProject();
             } else {
-                System.out.println("Welcome to BuildCLI - Java Project Management!");
+            	SystemOutLogger.log("Welcome to BuildCLI - Java Project Management!");
             }
         } catch (Exception e) {
             e.printStackTrace();
