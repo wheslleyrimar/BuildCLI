@@ -16,11 +16,11 @@ import org.buildcli.log.SystemOutLogger;
 public class BuildCLIIntro {
 
 	private BuildCLIIntro() { }
-	
+
     public static void welcome(){
     	SystemOutLogger.log(",-----.          ,--.,--.   ,--. ,-----.,--.   ,--.");
     	SystemOutLogger.log("|  |) /_ ,--.,--.`--'|  | ,-|  |'  .--./|  |   |  |");
-    	SystemOutLogger.log("|  .-.  \\|  ||  |,--.|  |' .-. ||  |    |  |   |  |       By Wheslley Rimar");
+    	SystemOutLogger.log("|  .-.  \\|  ||  |,--.|  |' .-. ||  |    |  |   |  |       Built by the community, for the community");
     	SystemOutLogger.log("|  '--' /'  ''  '|  ||  |\\ `-' |'  '--'\\|  '--.|  |");
     	SystemOutLogger.log("`------'  `----' `--'`--' `---'  `-----'`-----'`--'");
     	SystemOutLogger.log("");
