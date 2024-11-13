@@ -25,7 +25,7 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("-c", () -> new ProjectCompiler().compileProject());
 		this.put("--compile", () -> new ProjectCompiler().compileProject());
 		this.put("--add-dependency", () -> PomUtils.addDependencyToPom(optionCommand.dependency));
-		this.put("--rm-dependency", () -> PomUtils.addDependencyToPom(optionCommand.rmDependency));
+		this.put("--rm-dependency", () -> PomUtils.rmDependencyToPom(optionCommand.rmDependency));
 		this.put("-p", () -> ProjectInitializer.createProfileConfig(optionCommand.profile));
 		this.put("--profile", () -> ProjectInitializer.createProfileConfig(optionCommand.profile));
 		this.put("-e", () -> EnvironmentConfigManager.setEnvironment(optionCommand.environment));
