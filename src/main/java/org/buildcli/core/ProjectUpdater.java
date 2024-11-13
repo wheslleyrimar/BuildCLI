@@ -9,7 +9,7 @@ public class ProjectUpdater extends ProjectExecutor {
 	private static final String MVN_CHECK_UPDATES = "versions:display-dependency-updates";
 	private static final String MVN_LATEST_RELEASES = "versions:use-latest-releases";
 	
-	private List<String> command;
+	private final List<String> command;
 	private boolean isUpdateNow;
 	
 	public ProjectUpdater() {

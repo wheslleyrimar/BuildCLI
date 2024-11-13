@@ -127,12 +127,29 @@ public class Pom {
     	return this.dependencies.stream()
     			.anyMatch(d -> d.getGroupId().equals(groupId) && d.getArtifactId().equals(artifactId));
     }
+
+    public boolean hasDependency(Dependency dependency) {
+        return this.hasDependency(dependency.getGroupId(), dependency.getArtifactId());
+    }
     
     public int countDependencies() {
     	return this.dependencies.size();
     }
-    
-	@Override
+
+    public List<Dependency> getDependencies() {
+        return dependencies;
+    }
+
+    public Dependency getDependency(Dependency dependency) {
+        return this.dependencies
+                .stream()
+                .filter(d -> d.getGroupId().equals(dependency.getGroupId())
+                        && d.getArtifactId().equals(dependency.getArtifactId()))
+                .findFirst()
+                .orElseThrow();
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
         dependencies.forEach(dependency -> sb.append(dependency.getGroupId())

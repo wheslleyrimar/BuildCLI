@@ -1,18 +1,11 @@
 package org.buildcli.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import jakarta.xml.bind.JAXBContext;
+import org.buildcli.exception.ExtractionRuntimeException;
+import org.buildcli.log.SystemOutLogger;
+import org.buildcli.model.Dependency;
+import org.buildcli.model.Pom;
+import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -23,14 +16,18 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-import org.buildcli.exception.ExtractionRuntimeException;
-import org.buildcli.log.SystemOutLogger;
-import org.buildcli.model.Dependency;
-import org.buildcli.model.Pom;
-import org.xml.sax.SAXException;
-
-import jakarta.xml.bind.JAXBContext;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class PomUtils {
 
@@ -44,25 +41,25 @@ public class PomUtils {
     private PomUtils() { }
     
     public static Pom addDependencyToPom(String pomPath, String[] dependencies) {
-    	extractPomFile(Optional.of(pomPath));
+    	extractPomFile(pomPath);
     	Stream.of(dependencies).forEach(pom::addDependency);
         return pom;
     }
     
     public static void addDependencyToPom(String[] dependencies) {
-        extractPomFile(Optional.empty());
+        extractPomFile();
         Stream.of(dependencies).forEach(pom::addDependency);
         applyChangesToPom("Dependency added to pom.xml.", "Error adding dependency to pom.xml");
     }
     
     public static Pom rmDependencyToPom(String pomPath, String[] dependencies) {
-    	extractPomFile(Optional.of(pomPath));
+    	extractPomFile(pomPath);
     	Stream.of(dependencies).forEach(pom::rmDependency);
         return pom;
     }
     
     public static void rmDependencyToPom(String[] dependencies) {
-        extractPomFile(Optional.empty());
+        extractPomFile();
         Stream.of(dependencies).forEach(pom::rmDependency);
         applyChangesToPom("Dependency removed from pom.xml.", "Error removing dependency from pom.xml");
     }
@@ -77,10 +74,14 @@ public class PomUtils {
             logger.log(Level.SEVERE, failureMessage, e);
         }
     }
-    
-    private static void extractPomFile(Optional<String> pomPath) {
+
+	public static void extractPomFile() {
+		extractPomFile(FILE);
+	}
+
+    public static Pom extractPomFile(String pomPath) {
     	
-    	var pathFile = Paths.get(pomPath.isPresent() ? pomPath.get() : FILE);
+    	var pathFile = Paths.get(pomPath);
     	var pomFile = new File(pathFile.toFile().getAbsolutePath());
     	
     	try (var reader = new FileReader(pomFile); var br = new BufferedReader(reader)) {
@@ -95,7 +96,8 @@ public class PomUtils {
 	        pom = unmarshaller.unmarshal(filter, Pom.class).getValue();
             
 	        loadPomData(pomFile);
-            
+
+			return pom;
 		} catch (Exception e) {
 			throw new ExtractionRuntimeException(e);
 		}
