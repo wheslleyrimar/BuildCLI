@@ -16,9 +16,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -84,8 +82,7 @@ public class PomUtils {
     	var pathFile = Paths.get(pomPath);
     	var pomFile = new File(pathFile.toFile().getAbsolutePath());
     	
-    	try (var reader = new FileReader(pomFile); var br = new BufferedReader(reader)) {
-    		
+    	try {
 			var unmarshaller = JAXBContext.newInstance(Pom.class).createUnmarshaller();
 			
 			 // Set up XML input with namespace filtering

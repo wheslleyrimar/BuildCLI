@@ -1,15 +1,15 @@
 package org.buildcli.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlElementWrapper;
 import jakarta.xml.bind.annotation.XmlRootElement;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 @XmlRootElement(name = "project")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -53,10 +53,6 @@ public class Pom {
 
     public void addDependency(String groupId, String artifactId) {
         addDependency(groupId, artifactId, "LATEST");
-    }
-
-    public void addDependencyFile(String groupId, String artifactId, String version, String type, String scope, String optional) {
-        dependencies.add(new Dependency(groupId, artifactId, version, type, scope, optional));
     }
 
     public void rmDependency(String dependency) {

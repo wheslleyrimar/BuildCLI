@@ -27,13 +27,10 @@ public class ProjectUpdater extends ProjectExecutor {
 		return "Failed to check/update dependencies";
 	}
 
-	public ProjectUpdater setAdditionalParameters(List<String> additionalParameters) {
-		
+	public void setAdditionalParameters(List<String> additionalParameters) {
 		if (Objects.nonNull(additionalParameters)) {
 			this.command.addAll(additionalParameters);
 		}
-		
-		return this;
 	}
 	
 	public ProjectUpdater updateNow(boolean update) {
