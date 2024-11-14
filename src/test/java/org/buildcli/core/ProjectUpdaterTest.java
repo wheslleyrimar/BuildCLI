@@ -2,6 +2,7 @@ package org.buildcli.core;
 
 import org.buildcli.utils.PomUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -17,12 +18,13 @@ class ProjectUpdaterTest {
 	private static String backupPom;
 	private static String targetPom;
 
-	private final ProjectUpdater updater;
+	private ProjectUpdater updater;
 	
-	public ProjectUpdaterTest() {
+	@BeforeEach
+	public void setUp() {
 		this.updater = new ProjectUpdater();
 	}
-
+	
 	@AfterEach
 	public void tearDown() throws IOException {
 		Files.delete(Paths.get(targetPom));

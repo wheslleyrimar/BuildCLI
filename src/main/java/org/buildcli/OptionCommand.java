@@ -38,4 +38,7 @@ public class OptionCommand {
 
     @Option(names = {"--update-now"}, description = "Update dependencies to latest versions")
     boolean updateNow;
+    
+    @Option(names = {"-t", "--test"}, description = "Run tests")
+    boolean test;
 }
