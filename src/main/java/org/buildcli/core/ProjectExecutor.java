@@ -12,18 +12,23 @@ public abstract class ProjectExecutor {
 
 	private static final Logger logger = Logger.getLogger(ProjectExecutor.class.getName());
 	
-	protected abstract List<String> getMvnCommand();
+	protected final List<String> command;
+	
+	protected abstract void addMvnCommand();
 	
 	protected abstract String getErrorMessage();
 	
+	protected ProjectExecutor() {
+		this.command = new ArrayList<>();
+		this.command.add(SystemCommands.MVN.getCommand());
+	}
+	
     public void execute() {
     	
-    	var command = new ArrayList<String>();
-    	command.add(SystemCommands.MVN.getCommand());
-    	command.addAll(this.getMvnCommand());
+    	this.addMvnCommand();
     	
         try {
-            var builder = new ProcessBuilder(command);
+            var builder = new ProcessBuilder(this.command);
             builder.inheritIO();
             var process = builder.start();
             process.waitFor();

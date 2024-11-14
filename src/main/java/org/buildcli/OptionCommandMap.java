@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.buildcli.core.ProjectCompiler;
 import org.buildcli.core.ProjectInitializer;
 import org.buildcli.core.ProjectRunner;
+import org.buildcli.core.ProjectTester;
 import org.buildcli.core.ProjectUpdater;
 import org.buildcli.exception.ThrowingComandExecutorWrapper;
 import org.buildcli.utils.CodeDocumenter;
@@ -36,6 +37,8 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("-u", () -> new ProjectUpdater().execute());
 		this.put("--update", () -> new ProjectUpdater().execute());
 		this.put("--update-now", () -> new ProjectUpdater().updateNow(true).execute());
+		this.put("-t", () -> new ProjectTester().execute());
+		this.put("--test", () -> new ProjectTester().execute());
 	}
 
 }
