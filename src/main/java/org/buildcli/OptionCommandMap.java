@@ -8,9 +8,7 @@ import org.buildcli.core.ProjectRunner;
 import org.buildcli.core.ProjectTester;
 import org.buildcli.core.ProjectUpdater;
 import org.buildcli.exception.ThrowingComandExecutorWrapper;
-import org.buildcli.utils.CodeDocumenter;
-import org.buildcli.utils.EnvironmentConfigManager;
-import org.buildcli.utils.PomUtils;
+import org.buildcli.utils.*;
 
 public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 
@@ -39,6 +37,10 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("--update-now", () -> new ProjectUpdater().updateNow(true).execute());
 		this.put("-t", () -> new ProjectTester().execute());
 		this.put("--test", () -> new ProjectTester().execute());
+		this.put("-k", () -> new DockerManager().setupDocker());
+		this.put("--dockerize", () -> new DockerManager().setupDocker());
+		this.put("--docker-build", () -> new DockerBuildRunner().buildAndRunDocker());
+
 	}
 
 }

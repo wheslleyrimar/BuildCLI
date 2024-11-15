@@ -36,19 +36,42 @@ public class ProjectRunner {
             System.out.println("Active Profile: " + activeProfile);
             System.out.println(profileMessage);
 
-            // Executar o projeto com o perfil ativo
-            ProcessBuilder builder = new ProcessBuilder(
-                    SystemCommands.MVN.getCommand(),
-                    "spring-boot:run",
-                    "-q"
-            );
-            builder.environment().put("ACTIVE_PROFILE", activeProfile); // Define o perfil como variável de ambiente
-            builder.inheritIO();
-            Process process = builder.start();
-            process.waitFor();
+            // Compilar e executar o projeto
+            compileProject(); // Garante que o projeto está compilado
+            runJar(); // Executa o JAR gerado
         } catch (IOException | InterruptedException e) {
             logger.log(Level.SEVERE, "Failed to run project", e);
             Thread.currentThread().interrupt();
+        }
+    }
+
+    private void compileProject() throws IOException, InterruptedException {
+        ProcessBuilder builder = new ProcessBuilder(
+                SystemCommands.MVN.getCommand(),
+                "package",
+                "-q" // Modo silencioso
+        );
+        builder.inheritIO();
+        Process process = builder.start();
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException("Failed to compile project. Maven exited with code " + exitCode);
+        }
+        System.out.println("Project compiled successfully.");
+    }
+
+    private void runJar() throws IOException, InterruptedException {
+        String jarPath = "target/GeneratedApp-1.0-SNAPSHOT.jar"; // Caminho do JAR gerado
+        ProcessBuilder builder = new ProcessBuilder(
+                "java",
+                "-jar",
+                jarPath
+        );
+        builder.inheritIO();
+        Process process = builder.start();
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException("Failed to run project JAR. Process exited with code " + exitCode);
         }
     }
 

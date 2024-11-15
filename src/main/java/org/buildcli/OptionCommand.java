@@ -38,7 +38,13 @@ public class OptionCommand {
 
     @Option(names = {"--update-now"}, description = "Update dependencies to latest versions")
     boolean updateNow;
-    
+
     @Option(names = {"-t", "--test"}, description = "Run tests")
     boolean test;
+
+    @Option(names = {"--dockerize"}, description = "Generate a Dockerfile for the project")
+    boolean dockerize;
+
+    @Option(names = {"--docker-build"}, description = "Build and run the Docker container")
+    boolean dockerBuild;
 }
