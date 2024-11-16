@@ -3,6 +3,7 @@ package org.buildcli.core;
 import org.buildcli.utils.ProfileManager;
 import org.buildcli.utils.SystemCommands;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -36,21 +37,60 @@ public class ProjectRunner {
             System.out.println("Active Profile: " + activeProfile);
             System.out.println(profileMessage);
 
-            // Executar o projeto com o perfil ativo
-            ProcessBuilder builder = new ProcessBuilder(
-                    SystemCommands.MVN.getCommand(),
-                    "spring-boot:run",
-                    "-q"
-            );
-            builder.environment().put("ACTIVE_PROFILE", activeProfile); // Define o perfil como variável de ambiente
-            builder.inheritIO();
-            Process process = builder.start();
-            process.waitFor();
+            // Compilar e executar o projeto
+            compileProject(); // Garante que o projeto está compilado
+            runJar(); // Executa o JAR gerado
         } catch (IOException | InterruptedException e) {
             logger.log(Level.SEVERE, "Failed to run project", e);
             Thread.currentThread().interrupt();
         }
     }
+
+    private void compileProject() throws IOException, InterruptedException {
+        ProcessBuilder builder = new ProcessBuilder(
+                SystemCommands.MVN.getCommand(),
+                "package",
+                "-q" // Modo silencioso
+        );
+        builder.inheritIO();
+        Process process = builder.start();
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException("Failed to compile project. Maven exited with code " + exitCode);
+        }
+        System.out.println("Project compiled successfully.");
+    }
+
+    private void runJar() throws IOException, InterruptedException {
+        File targetDir = new File("target");
+        if (!targetDir.exists() || !targetDir.isDirectory()) {
+            throw new IOException("Target directory does not exist or is not a directory.");
+        }
+
+        // Busca pelo arquivo JAR na pasta target
+        File[] jarFiles = targetDir.listFiles((dir, name) -> name.endsWith(".jar"));
+        if (jarFiles == null || jarFiles.length == 0) {
+            throw new IOException("No JAR file found in target directory.");
+        }
+
+        // Assume que o primeiro arquivo JAR encontrado é o correto
+        File jarFile = jarFiles[0];
+        String jarPath = jarFile.getAbsolutePath();
+
+        // Executa o arquivo JAR
+        ProcessBuilder builder = new ProcessBuilder(
+                "java",
+                "-jar",
+                jarPath
+        );
+        builder.inheritIO();
+        Process process = builder.start();
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException("Failed to run project JAR. Process exited with code " + exitCode);
+        }
+    }
+
 
     private Properties loadProfileProperties(String profile) {
         Properties properties = new Properties();

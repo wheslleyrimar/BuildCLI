@@ -28,6 +28,8 @@
 - **Document Code**: [Beta] Generates documentation for a Java file using AI.
 - **Manage Configuration Profiles**: Creates specific configuration files for profiles (`application-dev.properties`, `application-test.properties`, etc.).
 - **Run Project**: Starts the project directly from the CLI using Spring Boot.
+- **Dockerize Project**: Generates a Dockerfile for the project, allowing easy containerization.
+- **Build and Run Docker Container**: Builds and runs the Docker container using the generated Dockerfile.
 
 ---
 
@@ -70,6 +72,11 @@ Options:
       --set-environment     Sets the active profile for the environment (dev, test, prod) by updating `environment.config`
       --run                 Runs the Java project
   -d, --document-code       [Beta] Generates documentation for a Java file using AI (e.g., `buildcli -d <path-to-file>.java`)
+  -u, --update              Check for dependency updates
+  --update-now              Update dependencies to latest versions
+  -t, --test                Run tests
+      --dockerize           Generate a Dockerfile for the project
+      --docker-build        Build and run the Docker container
   -h, --help                Shows help
   -V, --version             Shows the version of BuildCLI
 ```
@@ -79,10 +86,22 @@ Options:
 ## Examples
 
 ### 1. Initialize a New Project
-Creates the basic Java project structure, including `src/main/java`, `pom.xml`, and `README.md`:
+Creates the basic Java project structure, including `src/main/java`, `pom.xml`, and `README.md`.
+You can specify a project name to dynamically set the package structure and project artifact.
+
+#### Example Commands
+- To initialize a project with a specific name:
+```bash
+buildcli --init MyProject
+```
+This will create the project structure with `MyProject` as the base package name, resulting in a directory like `src/main/java/org/myproject`.
+
+- To initialize a project without specifying a name:
 ```bash
 buildcli --init
 ```
+This will create the project structure with `buildcli` as the base package name, resulting in a directory like `src/main/java/org/buildcli`.
+
 
 ### 2. Compile the Project
 Compiles the Java project using Maven:
@@ -133,6 +152,17 @@ After running this command, the active profile is set to dev, and the `environme
 #### Active Profile Display During Project Execution
 With the `--set-environment` functionality, you can set the active environment profile. When running the project with `buildcli --run`, the active profile will be displayed in the terminal.
 
+### 8. Dockerize Command
+This command generates a `Dockerfile` for your Java project, making it easier to containerize your application.
+```bash
+buildcli --dockerize
+```
+
+### 9. Docker Build Command
+This command automatically builds and runs the Docker container for you. After running the command, the Docker image will be created, and your project will run inside the container.
+```bash
+buildcli --docker-build
+```
 ---
 
 ## Prerequisites
