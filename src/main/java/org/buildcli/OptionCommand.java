@@ -30,7 +30,7 @@ public class OptionCommand {
     @Option(names = {"--run"}, description = "Run the Java Project")
     boolean run;
 
-    @Option(names = {"-d", "--document-code"}, description = "Automatically document the Java code in the specified file")
+    @Option(names = {"-d", "--document-code"}, description = "Automatically document a Java file or all Java files in a project directory")
     String fileToDocument;
 
     @Option(names = {"-u", "--update"}, description = "Check for dependency updates")
