@@ -79,10 +79,22 @@ Options:
 ## Examples
 
 ### 1. Initialize a New Project
-Creates the basic Java project structure, including `src/main/java`, `pom.xml`, and `README.md`:
+Creates the basic Java project structure, including `src/main/java`, `pom.xml`, and `README.md`.
+You can specify a project name to dynamically set the package structure and project artifact.
+
+#### Example Commands
+- To initialize a project with a specific name:
+```bash
+buildcli --init MyProject
+```
+This will create the project structure with `MyProject` as the base package name, resulting in a directory like `src/main/java/org/myproject`.
+
+- To initialize a project without specifying a name:
 ```bash
 buildcli --init
 ```
+This will create the project structure with `buildcli` as the base package name, resulting in a directory like `src/main/java/org/buildcli`.
+
 
 ### 2. Compile the Project
 Compiles the Java project using Maven:

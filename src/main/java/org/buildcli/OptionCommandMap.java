@@ -19,8 +19,8 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		super();
 		var wrapper = new ThrowingComandExecutorWrapper();
 
-		this.put("-i", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject()));
-		this.put("--init", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject()));
+		this.put("-i", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));
+		this.put("--init", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));
 		this.put("-c", () -> new ProjectCompiler().compileProject());
 		this.put("--compile", () -> new ProjectCompiler().compileProject());
 		this.put("--add-dependency", () -> PomUtils.addDependencyToPom(optionCommand.dependency));
@@ -40,7 +40,5 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("-k", () -> new DockerManager().setupDocker());
 		this.put("--dockerize", () -> new DockerManager().setupDocker());
 		this.put("--docker-build", () -> new DockerBuildRunner().buildAndRunDocker());
-
 	}
-
 }
