@@ -8,144 +8,119 @@ import org.buildcli.log.SystemOutLogger;
 
 public class ProjectInitializer {
 
-    public void initializeProject() throws IOException {
-        String[] dirs = {"src/main/java", "src/main/resources", "src/test/java"};
+    public void initializeProject(String projectName) throws IOException {
+        String baseProject = (projectName != null && !projectName.isBlank()) ? projectName : "buildcli";
+        String basePackage = "org." + baseProject.toLowerCase();
+        String[] dirs = {
+                "src/main/java/" + basePackage.replace('.', '/'),
+                "src/main/resources",
+                "src/test/java/" + basePackage.replace('.', '/')
+        };
+
         for (String dir : dirs) {
             File directory = new File(dir);
             if (directory.mkdirs()) {
-            	SystemOutLogger.log("Directory created: " + dir);
+                SystemOutLogger.log("Directory created: " + dir);
             }
         }
 
-        createReadme();
-        createMainClass();
-        createPomFile();
+        createReadme(baseProject);
+        createMainClass(basePackage);
+        createPomFile(baseProject);
     }
 
-    private void createReadme() throws IOException {
+    private void createReadme(String projectName) throws IOException {
         File readme = new File("README.md");
         if (readme.createNewFile()) {
-        	SystemOutLogger.log("README.md file created.");
+            try (FileWriter writer = new FileWriter(readme)) {
+                writer.write("# " + projectName + "\n\nThis is the " + projectName + " project.");
+            }
+            SystemOutLogger.log("README.md file created.");
         }
     }
 
-    private void createMainClass() throws IOException {
-        File packageDir = new File("src/main/java/org/buildcli");
-        if(!packageDir.mkdirs())
-            throw new IOException("Could not create package directory: " + packageDir);
+    private void createMainClass(String basePackage) throws IOException {
+        String packagePath = "src/main/java/" + basePackage.replace('.', '/');
+        File packageDir = new File(packagePath);
+        if (!packageDir.exists() && !packageDir.mkdirs()) {
+            throw new IOException("Could not create package directory: " + packagePath);
+        }
+
         File javaClass = new File(packageDir, "Main.java");
         if (javaClass.createNewFile()) {
             try (FileWriter writer = new FileWriter(javaClass)) {
                 writer.write("""
-                        package org.buildcli;
+                    package %s;
 
-                        public class Main {
-                            public static void main(String[] args) {
-                                System.out.println("Hello, World!");
-                            }
-                        }""");
-                SystemOutLogger.log("Main.java file created with package and basic content.");
+                    public class Main {
+                        public static void main(String[] args) {
+                            System.out.println("Hello, World!");
+                        }
+                    }
+                """.formatted(basePackage, basePackage));
             }
+            SystemOutLogger.log("Main.java file created with package and basic content.");
         }
     }
 
-    private void createPomFile() throws IOException {
+    private void createPomFile(String projectName) throws IOException {
         File pomFile = new File("pom.xml");
         if (pomFile.createNewFile()) {
             try (FileWriter writer = new FileWriter(pomFile)) {
                 writer.write("""
-                            <project xmlns="http://maven.apache.org/POM/4.0.0"
-                                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                                     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://www.apache.org/xsd/maven-4.0.0.xsd">
-                                <modelVersion>4.0.0</modelVersion>
+                    <project xmlns="http://maven.apache.org/POM/4.0.0"
+                             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://www.apache.org/xsd/maven-4.0.0.xsd">
+                        <modelVersion>4.0.0</modelVersion>
 
-                                <groupId>com.example</groupId>
-                                <artifactId>GeneratedApp</artifactId>
-                                <version>1.0-SNAPSHOT</version>
+                        <groupId>org.%s</groupId>
+                        <artifactId>%s</artifactId>
+                        <version>1.0-SNAPSHOT</version>
 
-                                <!-- Propriedades do projeto -->
-                                <properties>
-                                    <maven.compiler.source>17</maven.compiler.source>
-                                    <maven.compiler.target>17</maven.compiler.target>
-                                    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-                                </properties>
+                        <properties>
+                            <maven.compiler.source>17</maven.compiler.source>
+                            <maven.compiler.target>17</maven.compiler.target>
+                            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                        </properties>
 
-                                <!-- Dependências do projeto -->
-                                <dependencies>
-                                    <!-- Dependência para JUnit 5 (para testes) -->
-                                    <dependency>
-                                        <groupId>org.junit.jupiter</groupId>
-                                        <artifactId>junit-jupiter-engine</artifactId>
-                                        <version>5.8.1</version>
-                                        <scope>test</scope>
-                                    </dependency>
-                                </dependencies>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.junit.jupiter</groupId>
+                                <artifactId>junit-jupiter-engine</artifactId>
+                                <version>5.8.1</version>
+                                <scope>test</scope>
+                            </dependency>
+                        </dependencies>
 
-                                <!-- Plugins do projeto -->
-                                <build>
-                                    <plugins>
-                                        <!-- Plugin para configurar a versão do Java -->
-                                        <plugin>
-                                            <groupId>org.apache.maven.plugins</groupId>
-                                            <artifactId>maven-compiler-plugin</artifactId>
-                                            <version>3.8.1</version>
-                                            <configuration>
-                                                <source>${maven.compiler.source}</source>
-                                                <target>${maven.compiler.target}</target>
-                                            </configuration>
-                                        </plugin>
-                            """ +
-
-                            // Descomente a opção desejada abaixo (Spring Boot ou Exec Maven Plugin)
-                            // Opção 1: Plugin do Spring Boot
-                            """
-                                        <plugin>
-                                            <groupId>org.springframework.boot</groupId>
-                                            <artifactId>spring-boot-maven-plugin</artifactId>
-                                            <version>3.0.0</version>
-                                        </plugin>
-                            """ +
-                            // Opção 2: Plugin Exec Maven para rodar projetos Java genéricos
-                            /*
-                            """
-                                        <plugin>
-                                            <groupId>org.codehaus.mojo</groupId>
-                                            <artifactId>exec-maven-plugin</artifactId>
-                                            <version>3.0.0</version>
-                                            <configuration>
-                                                <mainClass>com.example.Main</mainClass>
-                                            </configuration>
-                                        </plugin>
-                            """ +
-                            */
-                            """
-                                    </plugins>
-                                </build>
-                                <profiles>
-                                    <profile>
-                                        <id>dev</id>
-                                        <properties>
-                                            <spring.profiles.active>dev</spring.profiles.active>
-                                        </properties>
-                                    </profile>
-
-                                    <profile>
-                                        <id>test</id>
-                                        <properties>
-                                            <spring.profiles.active>test</spring.profiles.active>
-                                        </properties>
-                                    </profile>
-
-                                    <profile>
-                                        <id>prod</id>
-                                        <properties>
-                                            <spring.profiles.active>prod</spring.profiles.active>
-                                        </properties>
-                                    </profile>
-                                </profiles>
-                            </project>""");
-                SystemOutLogger.log("pom.xml file created with default configuration.");
+                        <build>
+                            <plugins>
+                                <plugin>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <artifactId>maven-compiler-plugin</artifactId>
+                                    <version>3.8.1</version>
+                                    <configuration>
+                                        <source>${maven.compiler.source}</source>
+                                        <target>${maven.compiler.target}</target>
+                                    </configuration>
+                                </plugin>
+                                <plugin>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <artifactId>maven-jar-plugin</artifactId>
+                                    <version>3.2.0</version>
+                                    <configuration>
+                                        <archive>
+                                            <manifest>
+                                                <mainClass>org.%s.Main</mainClass>
+                                            </manifest>
+                                        </archive>
+                                    </configuration>
+                                </plugin>
+                            </plugins>
+                        </build>
+                    </project>
+                """.formatted(projectName.toLowerCase(), projectName, projectName.toLowerCase()));
             }
+            SystemOutLogger.log("pom.xml file created with default configuration.");
         }
     }
 

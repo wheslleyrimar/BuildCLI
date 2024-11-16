@@ -12,10 +12,16 @@ public class ProjectCompiler {
 
     public void compileProject() {
         try {
-            ProcessBuilder builder = new ProcessBuilder(SystemCommands.MVN.getCommand(), "compile");
+            // Altere o comando para "package" em vez de "compile"
+            ProcessBuilder builder = new ProcessBuilder(SystemCommands.MVN.getCommand(), "package");
             builder.inheritIO();
             Process process = builder.start();
-            process.waitFor();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                logger.info("Project compiled successfully. JAR file generated in target directory.");
+            } else {
+                logger.severe("Failed to compile project. Maven exited with code: " + exitCode);
+            }
         } catch (IOException | InterruptedException e) {
             logger.log(Level.SEVERE, "Failed to compile project", e);
             Thread.currentThread().interrupt();

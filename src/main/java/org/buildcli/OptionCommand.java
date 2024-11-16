@@ -6,11 +6,11 @@ import picocli.CommandLine.Spec;
 
 public class OptionCommand {
 
-	@Spec
-	CommandSpec spec;
+    @Spec
+    CommandSpec spec;
 
-    @Option(names = {"-i", "--init"}, description = "Initialize a new Java Project")
-    boolean init;
+    @Option(names = {"-i", "--init"}, arity = "0..1", paramLabel = "<projectName>", description = "Initialize a new Java Project with an optional project name")
+    String projectName;
 
     @Option(names = {"-c", "--compile"}, description = "Compile a Java Project")
     boolean compile;
@@ -18,7 +18,7 @@ public class OptionCommand {
     @Option(names = {"--add-dependency"}, split = ",", description = "Add a dependency in 'groupId:artifactId' or 'groupId:artifactId:version' format")
     String[] dependency;
 
-	@Option(names = {"--rm-dependency"}, split = ",", description = "Remove a dependency in 'groupId:artifactId' format")
+    @Option(names = {"--rm-dependency"}, split = ",", description = "Remove a dependency in 'groupId:artifactId' format")
     String[] rmDependency;
 
     @Option(names = {"-p", "--profile"}, description = "Create a configuration profile")
@@ -38,7 +38,13 @@ public class OptionCommand {
 
     @Option(names = {"--update-now"}, description = "Update dependencies to latest versions")
     boolean updateNow;
-    
+
     @Option(names = {"-t", "--test"}, description = "Run tests")
     boolean test;
+
+    @Option(names = {"--dockerize"}, description = "Generate a Dockerfile for the project")
+    boolean dockerize;
+
+    @Option(names = {"--docker-build"}, description = "Build and run the Docker container")
+    boolean dockerBuild;
 }
