@@ -3,10 +3,14 @@ package org.buildcli.core;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.buildcli.log.SystemOutLogger;
 
 public class ProjectInitializer {
+
+    private static final Logger LOGGER = Logger.getLogger(ProjectInitializer.class.getName());
 
     public void initializeProject(String projectName) throws IOException {
         String baseProject = (projectName != null && !projectName.isBlank()) ? projectName : "buildcli";
@@ -57,7 +61,7 @@ public class ProjectInitializer {
                             System.out.println("Hello, World!");
                         }
                     }
-                """.formatted(basePackage, basePackage));
+                """.formatted(basePackage));
             }
             SystemOutLogger.log("Main.java file created with package and basic content.");
         }
@@ -145,12 +149,12 @@ public class ProjectInitializer {
                 try (FileWriter writer = new FileWriter(profileFile)) {
                     writer.write(content);
                 }
-                System.out.println("Configuration profile created: " + fileName);
+                LOGGER.info(() -> "Configuration profile created: " + fileName);
             } else {
-                System.out.println("Configuration profile already exists: " + fileName);
+                LOGGER.warning(() -> "Configuration profile already exists: " + fileName);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Failed to create or write configuration profile: " + fileName, e);
         }
     }
 }
