@@ -32,8 +32,10 @@ public class ReleaseManager {
                 return;
             }
 
-            createGitTag(currentVersion);
+            createReleaseBranch(currentVersion);
             updateChangelog(currentVersion);
+            createGitTag(currentVersion);
+            pushReleaseBranch(currentVersion);
 
             logger.info(String.format("Release automation completed for version %s", currentVersion));
         } catch (IOException | InterruptedException e) {
@@ -60,9 +62,22 @@ public class ReleaseManager {
         return Files.readString(VERSION_FILE).trim();
     }
 
+    private void createReleaseBranch(String version) throws IOException, InterruptedException {
+        String branchName = "release/v" + version;
+        runGitCommandWithException("git", "checkout", "-b", branchName);
+        logger.info(String.format("Created and switched to branch %s", branchName));
+    }
+
     private void createGitTag(String version) throws IOException, InterruptedException {
         runGitCommandWithException("git", "tag", "-a", "v" + version, "-m", "Release " + version);
+        logger.info(String.format("Created tag v%s", version));
+    }
+
+    private void pushReleaseBranch(String version) throws IOException, InterruptedException {
+        String branchName = "release/v" + version;
+        runGitCommandWithException("git", "push", "-u", "origin", branchName);
         runGitCommandWithException("git", "push", "origin", "v" + version);
+        logger.info(String.format("Pushed branch %s and tag v%s to remote", branchName, version));
     }
 
     private void updateChangelog(String version) throws IOException {
