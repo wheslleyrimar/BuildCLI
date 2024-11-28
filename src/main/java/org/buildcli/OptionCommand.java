@@ -47,4 +47,10 @@ public class OptionCommand {
 
     @Option(names = {"--docker-build"}, description = "Build and run the Docker container")
     boolean dockerBuild;
+
+    @Option(names = {"--semver"}, description = "Manage semantic versioning (major, minor, patch)")
+    String semver;
+
+    @Option(names = {"--release"}, description = "Automate release by creating a Git tag and changelog")
+    boolean release;
 }
