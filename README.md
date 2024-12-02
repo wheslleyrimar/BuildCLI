@@ -69,14 +69,16 @@ Options:
       --add-dependency      Adds a dependency to the pom.xml in the 'groupId:artifactId' or 'groupId:artifactId:version' format
       --rm-dependency       Remove a dependency in 'groupId:artifactId' format
   -p, --profile             Creates a configuration profile (e.g., dev, test)
-      --set-environment     Sets the active profile for the environment (dev, test, prod) by updating `environment.config`
+  -e, --set-environment     Sets the active profile for the environment (dev, test, prod) by updating `environment.config`
       --run                 Runs the Java project
   -d, --document-code       [Beta] Generates documentation for a Java file using AI (e.g., `buildcli -d <path-to-file>.java`)
   -u, --update              Check for dependency updates
-  --update-now              Update dependencies to latest versions
+      --update-now          Update dependencies to latest versions
   -t, --test                Run tests
       --dockerize           Generate a Dockerfile for the project
       --docker-build        Build and run the Docker container
+      --semver              Manage semantic versioning (major, minor, patch)
+      --release             Automate release by creating a Git tag and changelog
   -h, --help                Shows help
   -V, --version             Shows the version of BuildCLI
 ```
