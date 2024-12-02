@@ -42,5 +42,11 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("--docker-build", () -> new DockerBuildRunner().buildAndRunDocker());
 		this.put("--semver", () -> new SemVerManager().manageVersion(optionCommand.semver));
 		this.put("--release", () -> new ReleaseManager().automateRelease());
+		this.put("--cicd-config", () -> {
+			if (optionCommand.cicdTool == null || optionCommand.cicdTool.isBlank()) {
+				throw new IllegalArgumentException("You must specify a CI/CD tool (e.g., github, gitlab, jenkins).");
+			}
+			new CICDManager().configureCICD(optionCommand.cicdTool);
+		});
 	}
 }

@@ -53,4 +53,7 @@ public class OptionCommand {
 
     @Option(names = {"--release"}, description = "Automate release by creating a Git tag and changelog")
     boolean release;
+
+    @Option(names = {"--cicd-config"}, description = "Configure CI/CD for the specified tool (e.g., github, gitlab, jenkins)")
+    String cicdTool;
 }

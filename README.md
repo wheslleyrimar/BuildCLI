@@ -30,6 +30,7 @@
 - **Run Project**: Starts the project directly from the CLI using Spring Boot.
 - **Dockerize Project**: Generates a Dockerfile for the project, allowing easy containerization.
 - **Build and Run Docker Container**: Builds and runs the Docker container using the generated Dockerfile.
+- **CI/CD Integration**: Automatically generates configuration files por CI/CD tools (e.g., Jenkins, Github Actions) and triggers pipelines based on project changes.
 
 ---
 
@@ -79,6 +80,7 @@ Options:
       --docker-build        Build and run the Docker container
       --semver              Manage semantic versioning (major, minor, patch)
       --release             Automate release by creating a Git tag and changelog
+      --cicd-config         Configure CI/CD for the specified tool (e.g., github, gitlab, jenkins)
   -h, --help                Shows help
   -V, --version             Shows the version of BuildCLI
 ```
@@ -165,6 +167,21 @@ This command automatically builds and runs the Docker container for you. After r
 ```bash
 buildcli --docker-build
 ```
+
+### 10. Set Up CI/CD Integration
+Generates configuration files for CI/CD tools and prepares the project for automated pipelines. Supports Jenkins, Gitlab and Github Actions.
+```bash
+buildcli --cicd-config github
+```
+
+```bash
+buildcli --cicd-config gitlab
+```
+
+```bash
+buildcli --cicd-config jenkins
+```
+
 ---
 
 ## Prerequisites
@@ -178,6 +195,12 @@ You can start the Ollama server by running:
 ```bash
 ollama run llama3.2
 ```
+
+### Prerequisites for CI/CD Integration
+- **Jenkins**: Ensure Jenkins is installed and accessible in your environment.
+- **GitHub Actions**: Ensure your repository is hosted on GitHub with Actions enabled.
+
+---
 
 ## Contribution
 
