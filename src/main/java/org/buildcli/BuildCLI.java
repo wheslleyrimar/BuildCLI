@@ -10,7 +10,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
 @Command(name = "BuildCLI", mixinStandardHelpOptions = true,
-         version = "BuildCLI 0.0.6",
+         version = "BuildCLI 0.0.8",
          description = "BuildCLI - A CLI for Java Project Management")
 public class BuildCLI implements Runnable {
 
