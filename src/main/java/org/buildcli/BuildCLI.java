@@ -3,6 +3,7 @@ package org.buildcli;
 import java.util.Objects;
 
 import org.buildcli.log.SystemOutLogger;
+import org.buildcli.log.config.LoggingConfig;
 import org.buildcli.utils.BuildCLIIntro;
 
 import picocli.CommandLine;
@@ -18,6 +19,8 @@ public class BuildCLI implements Runnable {
     private OptionCommand optionCommand;
 
     public static void main(String[] args) {
+        LoggingConfig.configure();
+
         int exitCode = new CommandLine(new BuildCLI()).execute(args);
         System.exit(exitCode);
     }
