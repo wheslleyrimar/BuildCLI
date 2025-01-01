@@ -83,6 +83,7 @@ Options:
       --cicd-config         Configure CI/CD for the specified tool (e.g., github, gitlab, jenkins)
   -h, --help                Shows help
   -V, --version             Shows the version of BuildCLI
+  -a, --about               Displays project information, including its purpose, repository, and contributors.
 ```
 
 ---
