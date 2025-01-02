@@ -1,9 +1,11 @@
 package org.buildcli.utils;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -108,6 +110,80 @@ public class ReleaseManager {
         int exitCode = runGitCommand(command);
         if (exitCode != 0) {
             throw new IOException(String.format("Git command '%s' failed. Ensure you are in a Git repository and the command is valid.", String.join(" ", command)));
+        }
+    }
+
+    private String runGitCommandAndShowOutput(String... command) throws IOException, InterruptedException {
+        ProcessBuilder builder = new ProcessBuilder(command);
+        builder.redirectErrorStream(true);
+        Process process = builder.start();
+
+        StringBuilder output = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append(System.lineSeparator());
+            }
+        }
+
+        int exitCode = process.waitFor();
+        if (exitCode != 0) {
+            throw new IOException(String.format("Git command '%s' failed with exit code %d.", String.join(" ", command), exitCode));
+        }
+
+        return output.toString();
+    }
+
+
+    public String showContributors() {
+
+        String localGit = "--git-dir=" + findGitRepository() +"/.git";
+        String workTree = "--work-tree=" +findGitRepository();;
+
+        String[] command = {
+                "sh", "-c",
+                String.format("git %s %s log --format='- %%aN <%%aE>' | sort | uniq",
+                        localGit, workTree)
+        };
+
+        try {
+            return runGitCommandAndShowOutput(command);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getBuildCLIBuildDirectory() {
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF")) {
+            if (inputStream == null) {
+                throw new IllegalStateException("Manifest not found.");
+            }
+            Manifest manifest = new Manifest(inputStream);
+            Attributes attributes = manifest.getMainAttributes();
+            String buildDirectory = attributes.getValue("Build-Directory");
+
+            if (buildDirectory == null) {
+                throw new IllegalStateException("Build-Directory not found in the Manifest.");
+            }
+
+            return buildDirectory;
+        } catch (Exception e) {
+            throw new RuntimeException("Error reading the Manifest.", e);
+        }
+    }
+
+    private String findGitRepository() {
+        try {
+            File dir = new File(getBuildCLIBuildDirectory());
+            while (dir != null && dir.exists()) {
+                if (new File(dir, ".git").exists()) {
+                    return dir.getCanonicalPath();
+                }
+                dir = dir.getParentFile();
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Error locating the Git repository.", e);
         }
     }
 }
