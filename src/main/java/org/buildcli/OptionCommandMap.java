@@ -48,5 +48,7 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 			}
 			new CICDManager().configureCICD(optionCommand.cicdTool);
 		});
+		this.put("--about", () -> new BuildCLIIntro().about());
+		this.put("-a", () -> new BuildCLIIntro().about());
 	}
 }
