@@ -44,6 +44,21 @@ public class BuildCLIIntro {
 		SystemOutLogger.log(contributors);
 	}
 
+	public static void checkUpdates(){
+		checkIfBuildCLILocalRepositoryIsUpdated();
+	}
+
+	private static void checkIfBuildCLILocalRepositoryIsUpdated() {
+		boolean updated = releaseManager.checkIfLocalRepositoryIsUpdated(localRepository);
+		if (!updated){
+			SystemOutLogger.log("""
+                    \u001B[33m
+                    ATTENTION: Your BuildCLI is outdated!
+                    \u001B[0m""");
+			//+"Do you wanna update? (Y/N)");
+		}
+	}
+
 	private static String getBuildCLIBuildDirectory() {
 		try (InputStream inputStream = BuildCLIIntro.class.getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF")) {
 			if (inputStream == null) {

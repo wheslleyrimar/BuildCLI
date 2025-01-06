@@ -4,6 +4,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -164,6 +167,29 @@ public class ReleaseManager {
             return null;
         } catch (Exception e) {
             logger.log(Level.SEVERE,"Git repository not found!");
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    protected boolean checkIfLocalRepositoryIsUpdated(String gitPath){
+        String gitDir = getGitDir(gitPath), workTree = getWorkTree(gitPath);
+
+        runGitCommand("sh", "-c", String.format("git %s %s fetch origin/main", gitDir, workTree));
+
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            Callable<String> gitStatusTask = () -> runGitCommandAndShowOutput("git", gitDir, workTree, "status -s");
+            Callable<String> gitDiffTask = () -> runGitCommandAndShowOutput("git", gitDir, workTree, "diff --exit-code");
+
+            var gitStatusFuture = executor.submit(gitStatusTask);
+            var gitDiffFuture = executor.submit(gitDiffTask);
+
+            String gitStatusResult = gitStatusFuture.get();
+            String gitDiffResult = gitDiffFuture.get();
+
+            return gitDiffResult.isBlank() && gitStatusResult.isBlank();
+
+        } catch (ExecutionException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

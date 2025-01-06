@@ -38,5 +38,7 @@ public class BuildCLI implements Runnable {
     		var optionsMap = new OptionCommandMap(this.optionCommand);
     		optionsMap.get(options.iterator().next()).exec();
     	}
+
+        BuildCLIIntro.checkUpdates();
     }
 }
