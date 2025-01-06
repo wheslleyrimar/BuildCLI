@@ -4,8 +4,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -113,10 +111,15 @@ public class ReleaseManager {
         }
     }
 
-    private String runGitCommandAndShowOutput(String... command) throws IOException, InterruptedException {
+    private String runGitCommandAndShowOutput(String... command) {
         ProcessBuilder builder = new ProcessBuilder(command);
         builder.redirectErrorStream(true);
-        Process process = builder.start();
+        Process process = null;
+        try {
+            process = builder.start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         StringBuilder output = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
@@ -124,21 +127,17 @@ public class ReleaseManager {
             while ((line = reader.readLine()) != null) {
                 output.append(line).append(System.lineSeparator());
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        int exitCode = process.waitFor();
-        if (exitCode != 0) {
-            throw new IOException(String.format("Git command '%s' failed with exit code %d.", String.join(" ", command), exitCode));
-        }
-
         return output.toString();
     }
 
 
-    public String showContributors() {
+    public String showContributors(String gitPath) {
 
-        String localGit = "--git-dir=" + findGitRepository() +"/.git";
-        String workTree = "--work-tree=" +findGitRepository();;
+        String localGit = getGitDir(gitPath);
+        String workTree = getWorkTree(gitPath);
 
         String[] command = {
                 "sh", "-c",
@@ -146,35 +145,16 @@ public class ReleaseManager {
                         localGit, workTree)
         };
 
-        try {
-            return runGitCommandAndShowOutput(command);
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return runGitCommandAndShowOutput(command);
     }
 
-    private String getBuildCLIBuildDirectory() {
-        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("META-INF/MANIFEST.MF")) {
-            if (inputStream == null) {
-                throw new IllegalStateException("Manifest not found.");
-            }
-            Manifest manifest = new Manifest(inputStream);
-            Attributes attributes = manifest.getMainAttributes();
-            String buildDirectory = attributes.getValue("Build-Directory");
-
-            if (buildDirectory == null) {
-                throw new IllegalStateException("Build-Directory not found in the Manifest.");
-            }
-
-            return buildDirectory;
-        } catch (Exception e) {
-            throw new RuntimeException("Error reading the Manifest.", e);
-        }
+    private String getDirectory() {
+            return System.getProperty("user.dir");
     }
 
-    private String findGitRepository() {
+    protected String findGitRepository(String path) {
         try {
-            File dir = new File(getBuildCLIBuildDirectory());
+            File dir = new File(path);
             while (dir != null && dir.exists()) {
                 if (new File(dir, ".git").exists()) {
                     return dir.getCanonicalPath();
@@ -183,7 +163,16 @@ public class ReleaseManager {
             }
             return null;
         } catch (Exception e) {
-            throw new RuntimeException("Error locating the Git repository.", e);
+            logger.log(Level.SEVERE,"Git repository not found!");
+            throw new RuntimeException(e);
         }
+    }
+
+    private String getGitDir(String localRepository){
+        return "--git-dir=" + localRepository +"/.git";
+    }
+
+    private String getWorkTree(String localRepository){
+        return  "--work-tree=" +localRepository;
     }
 }
