@@ -1,5 +1,6 @@
 package org.buildcli.utils;
 
+import org.buildcli.domain.git.GitCommandExecutor;
 import org.buildcli.log.SystemOutLogger;
 
 import java.io.InputStream;
@@ -19,8 +20,8 @@ import java.util.jar.Manifest;
 * */
 public class BuildCLIIntro {
 
-	private static final ReleaseManager releaseManager =new ReleaseManager();
-	private static final String localRepository = releaseManager.findGitRepository(getBuildCLIBuildDirectory());
+	private static final GitCommandExecutor gitExec = new GitCommandExecutor();
+	private static final String localRepository = gitExec.findGitRepository(getBuildCLIBuildDirectory());
 
 	public BuildCLIIntro() { }
 
@@ -38,10 +39,7 @@ public class BuildCLIIntro {
 				"It allows you to create, compile, manage dependencies, and run Java projects directly from the terminal, simplifying the development process.\n");
 		SystemOutLogger.log("Visit the repository for more details: https://github.com/wheslleyrimar/BuildCLI\n");
 
-		String contributors = releaseManager.showContributors(localRepository);
-
-		SystemOutLogger.log("Contributors:\n");
-		SystemOutLogger.log(contributors);
+		gitExec.showContributors(localRepository);
 	}
 
 	public static void checkUpdates(){
@@ -49,7 +47,7 @@ public class BuildCLIIntro {
 	}
 
 	private static void checkIfBuildCLILocalRepositoryIsUpdated() {
-		boolean updated = releaseManager.checkIfLocalRepositoryIsUpdated(localRepository);
+		boolean updated = gitExec.checkIfLocalRepositoryIsUpdated(localRepository);
 		if (!updated){
 			SystemOutLogger.log("""
                     \u001B[33m
