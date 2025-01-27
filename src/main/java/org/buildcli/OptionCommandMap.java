@@ -18,6 +18,7 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 
 		super();
 		var wrapper = new ThrowingComandExecutorWrapper();
+		MavenInstaller.installMaven();
 
 		this.put("-i", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));
 		this.put("--init", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));
