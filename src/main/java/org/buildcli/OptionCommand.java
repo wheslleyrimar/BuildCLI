@@ -59,4 +59,7 @@ public class OptionCommand {
 
     @Option(names = {"-a","--about"}, description = "Displays project information, including its purpose, repository, and contributors.")
     boolean about;
+
+    @Option(names = {"--cleanup"}, description = "Remove the target folder")
+    boolean cleanup;
 }
