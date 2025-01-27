@@ -34,7 +34,7 @@ public class DirectoryCleanup {
           return FileVisitResult.CONTINUE;
         }
       });
-      SystemOutLogger.log("The '%s' directory was successfully cleaned.");
+      SystemOutLogger.log("The '%s' directory was successfully cleaned.".formatted(targetPath.toString()));
     } catch (IOException e) {
       SystemOutLogger.log("Error clearing '%s' directory: %s".formatted(directory, e.getMessage()));
     }
