@@ -10,13 +10,13 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 
-public class ProjectCleanup {
+public class DirectoryCleanup {
 
-  public static void cleanup() {
-    var targetPath = new File("target").toPath();
+  public static void cleanup(String directory) {
+    var targetPath = new File(directory).toPath();
 
     if (!Files.exists(targetPath)) {
-      SystemOutLogger.log("The 'target' directory does not exist.");
+      SystemOutLogger.log("The '%s' directory does not exist.".formatted(targetPath.toString()));
       return;
     }
 
@@ -34,9 +34,9 @@ public class ProjectCleanup {
           return FileVisitResult.CONTINUE;
         }
       });
-      SystemOutLogger.log("The 'target' directory was successfully cleaned.");
+      SystemOutLogger.log("The '%s' directory was successfully cleaned.");
     } catch (IOException e) {
-      SystemOutLogger.log("Error clearing 'target' directory': " + e.getMessage());
+      SystemOutLogger.log("Error clearing '%s' directory: %s".formatted(directory, e.getMessage()));
     }
   }
 }
