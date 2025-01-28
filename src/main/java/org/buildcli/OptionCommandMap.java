@@ -10,6 +10,8 @@ import org.buildcli.core.ProjectUpdater;
 import org.buildcli.exception.ThrowingComandExecutorWrapper;
 import org.buildcli.utils.*;
 
+import static org.buildcli.utils.tools.ToolChecks.checksMaven;
+
 public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 
 	private static final long serialVersionUID = 1L;
@@ -18,7 +20,9 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 
 		super();
 		var wrapper = new ThrowingComandExecutorWrapper();
-		MavenInstaller.installMaven();
+		if (!checksMaven() && !optionCommand.skipMvnInstall) {
+			MavenInstaller.installMaven();
+		}
 
 		this.put("-i", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));
 		this.put("--init", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));

@@ -21,6 +21,7 @@ public abstract class FileExtractor {
   public static void extractFile(String filePath, String extractTo) throws IOException {
     CompressedFileExtractor fileExtractor;
 
+    SystemOutLogger.log("Validating extension file to: " + filePath);
     if (filePath.endsWith(".zip")) {
       fileExtractor = new ZipFileExtractor();
     } else if (filePath.endsWith(".tar.gz")) {
@@ -29,6 +30,7 @@ public abstract class FileExtractor {
       throw new IllegalArgumentException("Archive format unsupported. Only use .zip or .tar.gz.");
     }
 
+    SystemOutLogger.log("Trying to extract %s to %s".formatted(filePath, extractTo));
     fileExtractor.extract(filePath, extractTo);
   }
 

@@ -62,4 +62,7 @@ public class OptionCommand {
 
     @Option(names = {"--cleanup"}, description = "Remove the target folder")
     boolean cleanup;
+
+    @Option(names = {"--skip-maven-install", "--skip-mvn-install"}, description = "Skip maven installation")
+    boolean skipMvnInstall;
 }

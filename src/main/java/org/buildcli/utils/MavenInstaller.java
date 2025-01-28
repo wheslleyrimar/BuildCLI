@@ -11,8 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
-import static org.buildcli.utils.SystemCommands.MVN;
+import java.nio.file.Paths;
 
 public abstract class MavenInstaller {
   private MavenInstaller() {
@@ -22,33 +21,33 @@ public abstract class MavenInstaller {
   private static final String MAVEN_NAME = "apache-maven-%s".formatted(MAVEN_VERSION);
   private static final String MAVEN_DOWNLOAD_URL = "https://dlcdn.apache.org/maven/maven-3/%s/binaries/%s-bin.".formatted(MAVEN_VERSION, MAVEN_NAME);
 
-  public static boolean checksMaven() {
-    try {
-      var process = new ProcessBuilder().command(MVN.getCommand(), "-v").start();
-
-      int exitCode = process.waitFor();
-
-      return exitCode == 0;
-    } catch (IOException | InterruptedException e) {
-      return false;
-    }
-  }
-
 
   public static void installMaven() {
-    if (!checksMaven()) {
-      try {
-        var file = downloadMaven();
-        var outputFile = installProgramFilesDirectory();
-        extractMaven(file.getAbsolutePath(), outputFile.getAbsolutePath());
-        configurePath(outputFile.getAbsolutePath());
+    SystemOutLogger.log("Installing Maven operation started...");
+    try {
+      SystemOutLogger.log("Downloading Maven operation started...");
+      var file = downloadMaven();
+      SystemOutLogger.log("Downloading Maven operation finished...");
 
-        if (file.exists()) {
-          DirectoryCleanup.cleanup(file.getAbsolutePath());
-        }
-      } catch (IOException | InterruptedException e) {
-        throw new RuntimeException(e);
+      SystemOutLogger.log("Maven downloaded to " + file.getAbsolutePath());
+      var outputFile = installProgramFilesDirectory();
+      SystemOutLogger.log("Maven install path set to " + outputFile.getAbsolutePath());
+
+      SystemOutLogger.log("Extracting Maven operation started...");
+      extractMaven(file.getAbsolutePath(), outputFile.getAbsolutePath());
+      SystemOutLogger.log("Extracting Maven operation finished...");
+
+      SystemOutLogger.log("Configuring Maven path operation started...");
+      configurePath(Paths.get(outputFile.getAbsolutePath(), MAVEN_NAME).toFile().getAbsolutePath());
+      SystemOutLogger.log("Configuring Maven path operation finished...");
+
+      if (file.exists()) {
+        SystemOutLogger.log("Cleaning up maven download path...");
+        DirectoryCleanup.cleanup(file.getAbsolutePath());
+        SystemOutLogger.log("Cleaning up maven download path finished...");
       }
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -66,11 +65,16 @@ public abstract class MavenInstaller {
 
   public static File downloadMaven() throws IOException, InterruptedException {
     var isWindows = OS.isWindows();
-    var request = HttpRequest.newBuilder().uri(URI.create(MAVEN_DOWNLOAD_URL + (isWindows ? "zip" : "tar.gz"))).GET().build();
+    var url = MAVEN_DOWNLOAD_URL + (isWindows ? "zip" : "tar.gz");
+    var request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+
+    SystemOutLogger.log("Downloading Maven artifact from: " + url);
 
     var client = HttpClient.newHttpClient();
 
+    SystemOutLogger.log("Connecting to " + url);
     var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+    SystemOutLogger.log("Connected to " + url);
 
     if (response.statusCode() != 200) {
       throw new IOException("Failed to download maven artifact: " + response.statusCode());
@@ -82,9 +86,10 @@ public abstract class MavenInstaller {
       throw new IOException("Failed to download maven artifact: " + response.statusCode());
     }
 
-    var mavenInstallDir = new File(MAVEN_NAME);
+    var mavenInstallDir = new File(MAVEN_NAME + (isWindows ? ".zip" : ".tar.gz"));
 
     if (mavenInstallDir.exists()) {
+      SystemOutLogger.log("Cleaning up maven install directory: " + mavenInstallDir);
       DirectoryCleanup.cleanup(mavenInstallDir.getAbsolutePath());
     }
 
@@ -129,13 +134,14 @@ public abstract class MavenInstaller {
   public static void configurePath(String mavenBinPath) throws IOException {
     var isWindows = OS.isWindows();
     if (isWindows) {
-      Runtime.getRuntime().exec("setx PATH \"%PATH%;" + mavenBinPath + "\"");
+      Runtime.getRuntime().exec("setx PATH \"%PATH%;" + mavenBinPath  + "\\\\bin\"");
     } else {
       File bashrc = new File(System.getProperty("user.home"), ".bashrc");
       try (FileWriter fw = new FileWriter(bashrc, true)) {
-        fw.write("\nexport PATH=$PATH:" + mavenBinPath + "\n");
+        fw.write("\nexport PATH=$PATH:" + mavenBinPath + "/bin\n");
       }
       SystemOutLogger.log("Please run: source ~/.bashrc");
+      SystemOutLogger.log("Please run: sudo chmod +x " + mavenBinPath + "/bin/mvn\n");
     }
   }
 }
