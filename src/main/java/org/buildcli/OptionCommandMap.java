@@ -51,5 +51,6 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("--about", () -> new BuildCLIIntro().about());
 		this.put("-a", () -> new BuildCLIIntro().about());
 		this.put("--cleanup", () -> DirectoryCleanup.cleanup("target"));
+		this.put("--setup-autocomplete", () -> new AutoCompleteManager().setupAutocomplete());
 	}
 }

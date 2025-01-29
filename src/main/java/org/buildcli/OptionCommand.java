@@ -62,4 +62,7 @@ public class OptionCommand {
 
     @Option(names = {"--cleanup"}, description = "Remove the target folder")
     boolean cleanup;
+
+    @Option(names = {"--setup-autocomplete"}, description = "Set up autocomplete for Bash, Zsh, or Fish")
+    boolean setupAutocomplete;
 }
