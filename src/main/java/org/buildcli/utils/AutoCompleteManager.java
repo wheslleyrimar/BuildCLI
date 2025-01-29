@@ -9,23 +9,23 @@ import java.nio.file.StandardOpenOption;
 public class AutoCompleteManager {
 
     public void setupAutocomplete() {
-        String commandName = "buildcli"; // Nome do comando principal
-        String fullyQualifiedClassName = "org.buildcli.OptionCommand"; // Classe principal do comando
+        String commandName = "buildcli";
+        String fullyQualifiedClassName = "org.buildcli.OptionCommand";
 
         try {
-            // Caminhos para salvar os scripts de autocomplete
+            // Paths to save the autocomplete scripts.
             Path bashCompletionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion.bash");
             Path zshCompletionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion.zsh");
             Path fishCompletionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion.fish");
 
-            // Gerar os scripts de autocomplete para cada shell
+            // Generate autocomplete scripts for each shell.
             AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + bashCompletionPath.toString()});
             AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + zshCompletionPath.toString()});
             AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + fishCompletionPath.toString()});
 
             System.out.println("Autocomplete scripts generated successfully!");
 
-            // Automatizar a configuração do shell
+            // Automate shell configuration.
             configureShell("bash", bashCompletionPath, "~/.bashrc");
             configureShell("zsh", zshCompletionPath, "~/.zshrc");
             configureShell("fish", fishCompletionPath, "~/.config/fish/config.fish");
@@ -46,14 +46,14 @@ public class AutoCompleteManager {
 
             String sourceCommand = "source " + completionPath + "\n";
 
-            // Verificar se o comando já foi adicionado ao arquivo de configuração
+            // Check if the command has already been added to the configuration file.
             String configContent = Files.readString(configFilePath);
             if (configContent.contains(sourceCommand)) {
                 System.out.printf("Autocomplete already configured for %s in %s%n", shell, configFilePath);
                 return;
             }
 
-            // Adicionar o comando ao arquivo de configuração
+            // Add the command to the configuration file.
             Files.writeString(configFilePath, sourceCommand, StandardOpenOption.APPEND);
             System.out.printf("Autocomplete configured for %s. Please restart your terminal or run 'source %s'%n", shell, configFilePath);
         } catch (IOException e) {
