@@ -1,10 +1,15 @@
 package org.buildcli.utils;
 
 import picocli.AutoComplete;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AutoCompleteManager {
 
@@ -13,31 +18,51 @@ public class AutoCompleteManager {
         String fullyQualifiedClassName = "org.buildcli.OptionCommand";
 
         try {
-            // Paths to save the autocomplete scripts.
-            Path bashCompletionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion.bash");
-            Path zshCompletionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion.zsh");
-            Path fishCompletionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion.fish");
+            List<String> availableShells = detectAvailableShells();
 
-            // Generate autocomplete scripts for each shell, automatically using --force if needed
-            generateAutoComplete(fullyQualifiedClassName, commandName, bashCompletionPath);
-            generateAutoComplete(fullyQualifiedClassName, commandName, zshCompletionPath);
-            generateAutoComplete(fullyQualifiedClassName, commandName, fishCompletionPath);
+            if (availableShells.isEmpty()) {
+                System.out.println("No supported shell detected. Skipping autocomplete setup.");
+                return;
+            }
 
-            System.out.println("Autocomplete scripts generated successfully!");
+            System.out.println("Detected shells: " + availableShells);
 
-            // Automate shell configuration.
-            configureShell("bash", bashCompletionPath, "~/.bashrc");
-            configureShell("zsh", zshCompletionPath, "~/.zshrc");
-            configureShell("fish", fishCompletionPath, "~/.config/fish/config.fish");
+            for (String shell : availableShells) {
+                Path completionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion." + shell);
+                generateAutoComplete(fullyQualifiedClassName, commandName, completionPath);
+                configureAutoCompleteDynamically(shell, completionPath);
+            }
+
+            System.out.println("Autocomplete setup completed successfully!");
 
         } catch (Exception e) {
             System.err.println("Failed to set up autocomplete: " + e.getMessage());
         }
     }
 
+    private List<String> detectAvailableShells() {
+        List<String> availableShells = new ArrayList<>();
+
+        if (isShellInstalled("bash")) availableShells.add("bash");
+        if (isShellInstalled("zsh")) availableShells.add("zsh");
+        if (isShellInstalled("fish")) availableShells.add("fish");
+
+        return availableShells;
+    }
+
+    private boolean isShellInstalled(String shell) {
+        Path shellPath = switch (shell) {
+            case "bash" -> Path.of("/bin/bash");
+            case "zsh" -> Path.of("/bin/zsh");
+            case "fish" -> Path.of("/usr/bin/fish");
+            default -> null;
+        };
+
+        return shellPath != null && Files.exists(shellPath);
+    }
+
     private void generateAutoComplete(String fullyQualifiedClassName, String commandName, Path completionPath) {
         try {
-            // If the file already exists, automatically add --force.
             if (Files.exists(completionPath)) {
                 System.out.println("Existing autocomplete script detected for " + commandName + ". Overwriting...");
                 AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + completionPath.toString(), "--force"});
@@ -49,29 +74,63 @@ public class AutoCompleteManager {
         }
     }
 
-    private void configureShell(String shell, Path completionPath, String configFile) {
+    private void configureAutoCompleteDynamically(String shell, Path completionPath) {
         try {
-            Path configFilePath = Path.of(configFile.replace("~", System.getProperty("user.home")));
+            List<String> configFiles = detectConfigFiles(shell);
 
-            if (!Files.exists(configFilePath)) {
-                System.out.printf("Configuration file for %s not found: %s%n", shell, configFilePath);
+            if (configFiles.isEmpty()) {
+                System.out.printf("No configuration files detected for %s.%n", shell);
                 return;
             }
 
             String sourceCommand = "source " + completionPath + "\n";
 
-            // Check if the command has already been added to the configuration file.
-            String configContent = Files.readString(configFilePath);
-            if (configContent.contains(sourceCommand)) {
-                System.out.printf("Autocomplete already configured for %s in %s%n", shell, configFilePath);
-                return;
-            }
+            for (String configFile : configFiles) {
+                Path configFilePath = Path.of(configFile.replace("~", System.getProperty("user.home")));
 
-            // Add the command to the configuration file.
-            Files.writeString(configFilePath, sourceCommand, StandardOpenOption.APPEND);
-            System.out.printf("Autocomplete configured for %s. Please restart your terminal or run 'source %s'%n", shell, configFilePath);
+                if (!Files.exists(configFilePath)) {
+                    System.out.printf("Configuration file not found: %s. Skipping.%n", configFile);
+                    continue;
+                }
+
+                String configContent = Files.readString(configFilePath);
+                if (configContent.contains(sourceCommand)) {
+                    System.out.printf("Autocomplete already configured in %s.%n", configFile);
+                    continue;
+                }
+
+                Files.writeString(configFilePath, sourceCommand, StandardOpenOption.APPEND);
+                System.out.printf("Autocomplete configured in %s. Restart your terminal or run 'source %s'.%n", configFile, configFile);
+            }
         } catch (IOException e) {
             System.err.printf("Failed to configure autocomplete for %s: %s%n", shell, e.getMessage());
         }
+    }
+
+    private List<String> detectConfigFiles(String shell) {
+        List<String> possibleFiles = new ArrayList<>();
+        String home = System.getProperty("user.home");
+
+        switch (shell) {
+            case "bash":
+                possibleFiles.add(home + "/.bashrc");
+                possibleFiles.add(home + "/.bash_profile");
+                possibleFiles.add(home + "/.profile");
+                break;
+            case "zsh":
+                possibleFiles.add(home + "/.zshrc");
+                possibleFiles.add(home + "/.zprofile");
+                break;
+            case "fish":
+                possibleFiles.add(home + "/.config/fish/config.fish");
+                break;
+            default:
+                System.out.println("Unrecognized shell: " + shell);
+                return Collections.emptyList();
+        }
+
+        return possibleFiles.stream()
+                .filter(path -> Files.exists(Path.of(path)))
+                .collect(Collectors.toList());
     }
 }
