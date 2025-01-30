@@ -37,7 +37,7 @@ public class AutoCompleteManager {
 
     private void generateAutoComplete(String fullyQualifiedClassName, String commandName, Path completionPath) {
         try {
-            // Se o arquivo já existe, adiciona automaticamente --force
+            // If the file already exists, automatically add --force.
             if (Files.exists(completionPath)) {
                 System.out.println("Existing autocomplete script detected for " + commandName + ". Overwriting...");
                 AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + completionPath.toString(), "--force"});
