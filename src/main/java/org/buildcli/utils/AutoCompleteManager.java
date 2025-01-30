@@ -18,10 +18,10 @@ public class AutoCompleteManager {
             Path zshCompletionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion.zsh");
             Path fishCompletionPath = Path.of(System.getProperty("user.home"), "." + commandName + "-completion.fish");
 
-            // Generate autocomplete scripts for each shell.
-            AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + bashCompletionPath.toString()});
-            AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + zshCompletionPath.toString()});
-            AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + fishCompletionPath.toString()});
+            // Generate autocomplete scripts for each shell, automatically using --force if needed
+            generateAutoComplete(fullyQualifiedClassName, commandName, bashCompletionPath);
+            generateAutoComplete(fullyQualifiedClassName, commandName, zshCompletionPath);
+            generateAutoComplete(fullyQualifiedClassName, commandName, fishCompletionPath);
 
             System.out.println("Autocomplete scripts generated successfully!");
 
@@ -32,6 +32,20 @@ public class AutoCompleteManager {
 
         } catch (Exception e) {
             System.err.println("Failed to set up autocomplete: " + e.getMessage());
+        }
+    }
+
+    private void generateAutoComplete(String fullyQualifiedClassName, String commandName, Path completionPath) {
+        try {
+            // Se o arquivo já existe, adiciona automaticamente --force
+            if (Files.exists(completionPath)) {
+                System.out.println("Existing autocomplete script detected for " + commandName + ". Overwriting...");
+                AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + completionPath.toString(), "--force"});
+            } else {
+                AutoComplete.main(new String[]{fullyQualifiedClassName, "-n=" + commandName, "-o=" + completionPath.toString()});
+            }
+        } catch (Exception e) {
+            System.err.println("Error generating autocomplete script for " + commandName + ": " + e.getMessage());
         }
     }
 
