@@ -84,6 +84,7 @@ Options:
   -h, --help                Shows help
   -V, --version             Shows the version of BuildCLI
   -a, --about               Displays project information, including its purpose, repository, and contributors.
+      --setup-autocomplete  Set up autocomplete for Bash, Zsh, or Fish
 ```
 
 ---
