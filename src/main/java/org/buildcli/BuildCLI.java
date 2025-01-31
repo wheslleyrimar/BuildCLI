@@ -11,8 +11,10 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
 
 @Command(name = "BuildCLI", mixinStandardHelpOptions = true,
-         version = "BuildCLI 0.0.8",
-         description = "BuildCLI - A CLI for Java Project Management")
+         version = "BuildCLI 0.0.12",
+         description = "BuildCLI - A CLI for Java Project Management",
+         subcommands = { CommandLine.HelpCommand.class, picocli.AutoComplete.GenerateCompletion.class }
+)
 public class BuildCLI implements Runnable {
 
     @Mixin
