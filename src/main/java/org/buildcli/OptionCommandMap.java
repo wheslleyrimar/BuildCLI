@@ -7,7 +7,7 @@ import org.buildcli.core.ProjectInitializer;
 import org.buildcli.core.ProjectRunner;
 import org.buildcli.core.ProjectTester;
 import org.buildcli.core.ProjectUpdater;
-import org.buildcli.exception.ThrowingComandExecutorWrapper;
+import org.buildcli.exceptions.ThrowingComandExecutorWrapper;
 import org.buildcli.utils.*;
 
 import static org.buildcli.utils.tools.ToolChecks.checksMaven;
@@ -28,8 +28,8 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("--init", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));
 		this.put("-c", () -> new ProjectCompiler().compileProject());
 		this.put("--compile", () -> new ProjectCompiler().compileProject());
-		this.put("--add-dependency", () -> PomUtils.addDependencyToPom(optionCommand.dependency));
-		this.put("--rm-dependency", () -> PomUtils.rmDependencyToPom(optionCommand.rmDependency));
+		/*this.put("--add-dependency", () -> PomUtils.addDependencyToPom(optionCommand.dependency));*/
+		/*this.put("--rm-dependency", () -> PomUtils.rmDependencyToPom(optionCommand.rmDependency));*/
 		this.put("-p", () -> ProjectInitializer.createProfileConfig(optionCommand.profile));
 		this.put("--profile", () -> ProjectInitializer.createProfileConfig(optionCommand.profile));
 		this.put("-e", () -> EnvironmentConfigManager.setEnvironment(optionCommand.environment));
@@ -47,12 +47,12 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("--docker-build", () -> new DockerBuildRunner().buildAndRunDocker());
 		this.put("--semver", () -> new SemVerManager().manageVersion(optionCommand.semver));
 		this.put("--release", () -> new ReleaseManager().automateRelease());
-		this.put("--cicd-config", () -> {
+		/*this.put("--cicd-config", () -> {
 			if (optionCommand.cicdTool == null || optionCommand.cicdTool.isBlank()) {
 				throw new IllegalArgumentException("You must specify a CI/CD tool (e.g., github, gitlab, jenkins).");
 			}
 			new CICDManager().configureCICD(optionCommand.cicdTool);
-		});
+		});*/
 		this.put("--about", () -> new BuildCLIIntro().about());
 		this.put("-a", () -> new BuildCLIIntro().about());
 		this.put("--cleanup", () -> DirectoryCleanup.cleanup("target"));

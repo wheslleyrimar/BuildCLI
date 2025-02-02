@@ -18,13 +18,6 @@ public class BuildCLI implements Runnable {
     @Mixin
     private OptionCommand optionCommand;
 
-    public static void main(String[] args) {
-        LoggingConfig.configure();
-
-        int exitCode = new CommandLine(new BuildCLI()).execute(args);
-        System.exit(exitCode);
-    }
-
     @Override
     public void run() {
 

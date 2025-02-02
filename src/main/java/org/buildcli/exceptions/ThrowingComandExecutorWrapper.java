@@ -1,4 +1,4 @@
-package org.buildcli.exception;
+package org.buildcli.exceptions;
 
 public class ThrowingComandExecutorWrapper {
 	

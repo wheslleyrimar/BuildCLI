@@ -78,7 +78,7 @@
 								<!-- Define a classe principal do JAR -->
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>org.buildcli.BuildCLI</mainClass>
+									<mainClass>org.buildcli.CommandLineRunner</mainClass>
 									<manifestEntries>
 										<!-- Define o diretório de origem do JAR -->
 										<Build-Directory>${project.basedir}</Build-Directory>
