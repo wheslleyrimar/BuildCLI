@@ -2,6 +2,7 @@ package org.buildcli.commands.project;
 
 import org.buildcli.actions.commandline.JavaProcess;
 import org.buildcli.actions.commandline.MavenProcess;
+import org.buildcli.commands.project.run.DockerfileCommand;
 import org.buildcli.domain.BuildCLICommand;
 import org.buildcli.utils.ProfileManager;
 import picocli.CommandLine.Command;
@@ -15,7 +16,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Command(aliases = {"run"}, description = {})
+@Command(aliases = {"run"}, description = "", subcommands = {DockerfileCommand.class}, mixinStandardHelpOptions = true)
 public class RunCommand implements BuildCLICommand {
   private final Logger logger = Logger.getLogger(RunCommand.class.getName());
   private final ProfileManager profileManager = new ProfileManager();

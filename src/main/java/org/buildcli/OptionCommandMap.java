@@ -41,7 +41,7 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
     this.put("-t", () -> new ProjectTester().execute());
     this.put("--test", () -> new ProjectTester().execute());
     this.put("-k", () -> new DockerManager().setupDocker());
-    this.put("--dockerize", () -> new DockerManager().setupDocker());
+    /*this.put("--dockerize", () -> new DockerManager().setupDocker());*/
     this.put("--docker-build", () -> new DockerBuildRunner().buildAndRunDocker());
     this.put("--semver", () -> new SemVerManager().manageVersion(optionCommand.semver));
     this.put("--release", () -> new ReleaseManager().automateRelease());
