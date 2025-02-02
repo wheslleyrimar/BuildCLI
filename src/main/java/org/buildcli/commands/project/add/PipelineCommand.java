@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Parameters;
 
-@Command(aliases = {"pipeline"})
+@Command(aliases = {"pipeline", "p"}, description = "Configure CI/CD for the specified tool (e.g., github, gitlab, jenkins)", mixinStandardHelpOptions = true)
 public class PipelineCommand implements BuildCLICommand {
   private static final Logger logger = Logger.getLogger(PipelineCommand.class.getName());
 
@@ -26,7 +26,7 @@ public class PipelineCommand implements BuildCLICommand {
         generator.generate();
 
         logger.info("CI/CD configuration created successfully for " + toolName);
-      } catch (IOException e) {
+      } catch (IOException | IllegalStateException e) {
         logger.log(Level.SEVERE, "Failed to configure CI/CD for " + toolName, e);
       }
     }

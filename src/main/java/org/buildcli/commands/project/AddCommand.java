@@ -1,12 +1,10 @@
 package org.buildcli.commands.project;
 
-import org.buildcli.domain.BuildCLICommand;
-import picocli.CommandLine;
+import org.buildcli.commands.project.add.DependencyCommand;
+import org.buildcli.commands.project.add.PipelineCommand;
+import picocli.CommandLine.Command;
 
-@CommandLine.Command(aliases = {"add", "a"})
-public class AddCommand implements BuildCLICommand {
-  @Override
-  public void run() {
+@Command(aliases = {"add", "a"}, description = "", subcommands = {DependencyCommand.class, PipelineCommand.class}, mixinStandardHelpOptions = true)
+public class AddCommand {
 
-  }
 }
