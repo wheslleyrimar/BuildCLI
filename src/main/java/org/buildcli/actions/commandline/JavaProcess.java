@@ -6,16 +6,17 @@ import java.util.List;
 
 public class JavaProcess implements CommandLineProcess{
   private final List<String> commands = new ArrayList<>();
-  private JavaProcess() {}
+  private JavaProcess() {
+    commands.add("java");
+  }
 
   public static JavaProcess createRunJarProcess(String jarName) {
     var process = new JavaProcess();
 
-    process.commands.addAll(List.of("java", "-jar", jarName));
+    process.commands.addAll(List.of("-jar", jarName));
 
     return process;
   }
-
 
   @Override
   public int run() {

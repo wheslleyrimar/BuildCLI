@@ -1,16 +1,23 @@
 package org.buildcli.actions.commandline;
 
 import org.buildcli.constants.MavenConstants;
+import org.buildcli.utils.MavenInstaller;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.buildcli.utils.tools.ToolChecks.checksMaven;
+
 public class MavenProcess implements CommandLineProcess {
   private final List<String> commands = new ArrayList<>();
 
   private MavenProcess() {
+    if (!checksMaven()) {
+      MavenInstaller.installMaven();
+    }
+
     commands.add(MavenConstants.MAVEN_CMD);
   }
 

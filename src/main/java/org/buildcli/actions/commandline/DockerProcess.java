@@ -7,7 +7,9 @@ import java.util.Objects;
 
 public class DockerProcess implements CommandLineProcess{
   private final List<String> commands = new ArrayList<>();
-  private DockerProcess() {}
+  private DockerProcess() {
+    commands.add("docker");
+  }
 
   public static DockerProcess createBuildProcess(String tag) {
     return createBuildProcess(tag, null);
@@ -16,7 +18,7 @@ public class DockerProcess implements CommandLineProcess{
   public static DockerProcess createBuildProcess(String tag, String fileName) {
     var process = new DockerProcess();
 
-    process.commands.addAll(List.of("docker", "build", "-t", tag));
+    process.commands.addAll(List.of("build", "-t", tag));
 
     if (Objects.isNull(fileName)) {
       process.commands.add(".");
@@ -30,7 +32,7 @@ public class DockerProcess implements CommandLineProcess{
 
   public static DockerProcess createRunProcess(String tagName) {
     var process = new DockerProcess();
-    process.commands.addAll(List.of("docker", "run", "-p", "8080:8080", tagName));
+    process.commands.addAll(List.of("run", "-p", "8080:8080", tagName));
     return process;
   }
 

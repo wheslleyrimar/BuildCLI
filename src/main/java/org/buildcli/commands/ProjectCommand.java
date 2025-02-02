@@ -6,7 +6,8 @@ import picocli.CommandLine.Command;
 @Command(name = "project", aliases = {"p"}, description = "",
     subcommands = {
         AddCommand.class, RmCommand.class, BuildCommand.class, SetCommand.class,
-        TestCommand.class, RunCommand.class, InitCommand.class, CleanupCommand.class
+        TestCommand.class, RunCommand.class, InitCommand.class, CleanupCommand.class,
+        UpgradeCommand.class
     },
     mixinStandardHelpOptions = true
 )

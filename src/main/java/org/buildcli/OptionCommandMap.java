@@ -18,9 +18,9 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 
     super();
     var wrapper = new ThrowingComandExecutorWrapper();
-    if (!checksMaven() && !optionCommand.skipMvnInstall) {
+    /*if (!checksMaven() && !optionCommand.skipMvnInstall) {
       MavenInstaller.installMaven();
-    }
+    }*/
 
     /*this.put("-i", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));*/
     /*this.put("--init", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));*/
@@ -43,7 +43,7 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
     this.put("-k", () -> new DockerManager().setupDocker());
     /*this.put("--dockerize", () -> new DockerManager().setupDocker());*/
     /*this.put("--docker-build", () -> new DockerBuildRunner().buildAndRunDocker());*/
-    this.put("--semver", () -> new SemVerManager().manageVersion(optionCommand.semver));
+    /*this.put("--semver", () -> new SemVerManager().manageVersion(optionCommand.semver));*/
     this.put("--release", () -> new ReleaseManager().automateRelease());
 		/*this.put("--cicd-config", () -> {
 			if (optionCommand.cicdTool == null || optionCommand.cicdTool.isBlank()) {
