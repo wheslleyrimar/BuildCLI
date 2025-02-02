@@ -1,4 +1,4 @@
-package org.buildcli.commands.project.upgrade;
+package org.buildcli.commands.project.update;
 
 import org.buildcli.domain.BuildCLICommand;
 import org.buildcli.utils.SemVerManager;
