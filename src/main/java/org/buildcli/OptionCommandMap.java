@@ -32,7 +32,7 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
     /*this.put("--profile", () -> ProjectInitializer.createProfileConfig(optionCommand.profile));*/
     /*this.put("-e", () -> EnvironmentConfigManager.setEnvironment(optionCommand.environment));*/
     /*this.put("--set-environment", () -> EnvironmentConfigManager.setEnvironment(optionCommand.environment));*/
-    this.put("--run", () -> new ProjectRunner().runProject());
+    /*this.put("--run", () -> new ProjectRunner().runProject());*/
     this.put("-d", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));
     this.put("--document-code", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));
     this.put("-u", () -> new ProjectUpdater().execute());
