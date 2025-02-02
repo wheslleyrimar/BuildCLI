@@ -6,10 +6,18 @@ import org.buildcli.commands.VersionCommand;
 import picocli.CommandLine.Command;
 
 @Command(name = "BuildCLI", mixinStandardHelpOptions = true,
-    version = "BuildCLI 0.0.8",
-    description = "BuildCLI - A CLI for Java Project Management",
-    subcommands = {AboutCommand.class, ProjectCommand.class, VersionCommand.class}
-)
-public class BuildCLI {
+         version = "BuildCLI 0.0.8",
+         description = "BuildCLI - A CLI for Java Project Management")
+public class BuildCLI implements Runnable {
+
+    @Mixin
+    private OptionCommand optionCommand;
+
+    public static void main(String[] args) {
+        LoggingConfig.configure();
+
+        int exitCode = new CommandLine(new BuildCLI()).execute(args);
+        System.exit(exitCode);
+    }
 
 }
