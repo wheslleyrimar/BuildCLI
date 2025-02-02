@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import static picocli.CommandLine.Command;
 import static picocli.CommandLine.Parameters;
 
-@Command(aliases = {"pipeline", "p"}, description = "Configure CI/CD for the specified tool (e.g., github, gitlab, jenkins)", mixinStandardHelpOptions = true)
+@Command(name = "pipeline", aliases = {"pl"}, description = "Configure CI/CD for the specified tool (e.g., github, gitlab, jenkins)", mixinStandardHelpOptions = true)
 public class PipelineCommand implements BuildCLICommand {
   private static final Logger logger = Logger.getLogger(PipelineCommand.class.getName());
 

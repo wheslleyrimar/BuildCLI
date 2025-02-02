@@ -1,37 +1,15 @@
 package org.buildcli;
 
-import java.util.Objects;
-
-import org.buildcli.log.SystemOutLogger;
-import org.buildcli.log.config.LoggingConfig;
-import org.buildcli.utils.BuildCLIIntro;
-
-import picocli.CommandLine;
+import org.buildcli.commands.AboutCommand;
+import org.buildcli.commands.ProjectCommand;
+import org.buildcli.commands.VersionCommand;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
 
 @Command(name = "BuildCLI", mixinStandardHelpOptions = true,
-         version = "BuildCLI 0.0.8",
-         description = "BuildCLI - A CLI for Java Project Management")
-public class BuildCLI implements Runnable {
+    version = "BuildCLI 0.0.8",
+    description = "BuildCLI - A CLI for Java Project Management",
+    subcommands = {AboutCommand.class, ProjectCommand.class, VersionCommand.class}
+)
+public class BuildCLI {
 
-    @Mixin
-    private OptionCommand optionCommand;
-
-    @Override
-    public void run() {
-
-        BuildCLIIntro.welcome();
-
-    	var options = optionCommand.spec.commandLine().getParseResult().originalArgs();
-
-    	if (Objects.isNull(options) || options.isEmpty()) {
-    		SystemOutLogger.log("Welcome to BuildCLI - Java Project Management!");
-    	} else {
-    		var optionsMap = new OptionCommandMap(this.optionCommand);
-    		optionsMap.get(options.iterator().next()).exec();
-    	}
-
-        BuildCLIIntro.checkUpdates();
-    }
 }

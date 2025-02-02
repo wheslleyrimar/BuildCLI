@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-@Command(aliases = {"dependency", "d"}, description = "", mixinStandardHelpOptions = true)
+@Command(name = "dependency", aliases = {"d"}, description = "", mixinStandardHelpOptions = true)
 public class DependencyCommand implements BuildCLICommand {
   private final Logger logger = Logger.getLogger(DependencyCommand.class.getName());
   @Parameters

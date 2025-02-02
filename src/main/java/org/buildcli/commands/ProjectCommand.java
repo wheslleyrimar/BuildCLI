@@ -5,7 +5,7 @@ import org.buildcli.commands.project.BuildCommand;
 import org.buildcli.commands.project.RmCommand;
 import picocli.CommandLine.Command;
 
-@Command(aliases = {"project", "p"}, description = "",
+@Command(name = "project", aliases = {"p"}, description = "",
     subcommands = {AddCommand.class, RmCommand.class, BuildCommand.class},
     mixinStandardHelpOptions = true
 )

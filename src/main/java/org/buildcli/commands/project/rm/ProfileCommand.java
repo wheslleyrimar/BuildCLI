@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Command(aliases = {"profile", "p"}, description = "", mixinStandardHelpOptions = true)
+@Command(name = "profile", aliases = {"p"}, description = "", mixinStandardHelpOptions = true)
 public class ProfileCommand implements BuildCLICommand {
   private final Logger LOGGER = Logger.getLogger(ProfileCommand.class.getName());
 

@@ -1,9 +1,9 @@
 package org.buildcli.commands;
 
 import org.buildcli.domain.BuildCLICommand;
-import picocli.CommandLine;
+import picocli.CommandLine.Command;
 
-@CommandLine.Command(aliases = {"about", "a"}, description = "", mixinStandardHelpOptions = true)
+@Command(name = "about", aliases = {"a"}, description = "", mixinStandardHelpOptions = true)
 public class AboutCommand implements BuildCLICommand {
 
   @Override
