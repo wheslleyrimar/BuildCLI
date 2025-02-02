@@ -20,9 +20,16 @@ public abstract class ProjectExecutor {
 	
 	protected ProjectExecutor() {
 		this.command = new ArrayList<>();
-		this.command.add(SystemCommands.MVN.getCommand());
+        if (isMavenRequired()) {
+            this.command.add(SystemCommands.MVN.getCommand());
+        }
 	}
-	
+
+    protected boolean isMavenRequired() {
+        // Implement logic to determine if Maven is required for the command
+        // For example, check if the command involves compiling, testing, etc.
+        return true; // Default to true, override in subclasses as needed
+    }
     public void execute() {
     	
     	this.addMvnCommand();
