@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-@Command(aliases = {"init", "i"}, description = "", mixinStandardHelpOptions = true)
+@Command(name = "init", aliases ={"i"}, description = "", mixinStandardHelpOptions = true)
 public class InitCommand implements BuildCLICommand {
   @Option(names = {"--name", "-n"}, defaultValue = "buildcli")
   private String projectName;

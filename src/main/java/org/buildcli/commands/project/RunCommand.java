@@ -16,7 +16,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Command(aliases = {"run"}, description = "", subcommands = {DockerfileCommand.class}, mixinStandardHelpOptions = true)
+@Command(name = "run", description = "", subcommands = {DockerfileCommand.class}, mixinStandardHelpOptions = true)
 public class RunCommand implements BuildCLICommand {
   private final Logger logger = Logger.getLogger(RunCommand.class.getName());
   private final ProfileManager profileManager = new ProfileManager();

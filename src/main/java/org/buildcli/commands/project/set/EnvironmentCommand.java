@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.logging.Logger;
 
-@Command(aliases = {"environment", "env", "e"}, description = "", mixinStandardHelpOptions = true)
+@Command(name = "environment", aliases = {"env", "e"}, description = "", mixinStandardHelpOptions = true)
 public class EnvironmentCommand implements BuildCLICommand {
   private final Logger logger = Logger.getLogger(EnvironmentCommand.class.getName());
   private final Path configPath = Path.of("environment.config");;
