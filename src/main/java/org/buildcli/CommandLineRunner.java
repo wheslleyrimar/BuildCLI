@@ -7,7 +7,9 @@ public class CommandLineRunner {
   public static void main(String[] args) {
     LoggingConfig.configure();
 
-    int exitCode = new CommandLine(new BuildCLI()).execute(args);
+    var commandLine = new CommandLine(new BuildCLI());
+
+    int exitCode = commandLine.execute(args);
 
     System.exit(exitCode);
   }
