@@ -44,7 +44,7 @@ public class DockerfileCommand implements BuildCLICommand {
         System.out.println("Dockerfile already exists.");
       }
       System.out.println("Dockerfile created successfully.");
-      System.out.println("Use 'buildcli --docker-build' to build and run the Docker container.");
+      System.out.println("Use 'buildcli project run docker' to build and run the Docker container.");
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Failed to setup Docker", e);
       System.err.println("Error: Could not setup Docker environment.");
