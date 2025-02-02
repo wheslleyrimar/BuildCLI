@@ -1,14 +1,6 @@
 package org.buildcli;
 
-import org.buildcli.core.ProjectRunner;
-import org.buildcli.core.ProjectTester;
-import org.buildcli.core.ProjectUpdater;
-import org.buildcli.exceptions.ThrowingComandExecutorWrapper;
-import org.buildcli.utils.*;
-
 import java.util.HashMap;
-
-import static org.buildcli.utils.tools.ToolChecks.checksMaven;
 
 public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 
@@ -17,7 +9,7 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
   public OptionCommandMap(OptionCommand optionCommand) {
 
     super();
-    var wrapper = new ThrowingComandExecutorWrapper();
+    //var wrapper = new ThrowingComandExecutorWrapper();
     /*if (!checksMaven() && !optionCommand.skipMvnInstall) {
       MavenInstaller.installMaven();
     }*/
@@ -33,8 +25,8 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
     /*this.put("-e", () -> EnvironmentConfigManager.setEnvironment(optionCommand.environment));*/
     /*this.put("--set-environment", () -> EnvironmentConfigManager.setEnvironment(optionCommand.environment));*/
     /*this.put("--run", () -> new ProjectRunner().runProject());*/
-    this.put("-d", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));
-    this.put("--document-code", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));
+    /*this.put("-d", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));*/
+    /*this.put("--document-code", () -> CodeDocumenter.getDocumentationFromOllama(optionCommand.fileToDocument));*/
     /*this.put("-u", () -> new ProjectUpdater().execute());*/
     /*this.put("--update", () -> new ProjectUpdater().execute());*/
     /*this.put("--update-now", () -> new ProjectUpdater().updateNow(true).execute());*/
