@@ -26,10 +26,14 @@ public abstract class ProjectExecutor {
 	}
 
     protected boolean isMavenRequired() {
-        // Implement logic to determine if Maven is required for the command
-        // For example, check if the command involves compiling, testing, etc.
-        return true; // Default to true, override in subclasses as needed
+        for (String cmd : this.command) {
+            if(cmd.contains("compile") || cmd.contains("test") || cmd.contains("package") || cmd.contains("run")){
+                return true;
+            }
+        }
+        return false;
     }
+
     public void execute() {
     	
     	this.addMvnCommand();
