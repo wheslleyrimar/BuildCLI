@@ -26,3 +26,4 @@ Contributions are welcome! Feel free to open **Issues** and submit **Pull Reques
 6. Open a Pull Request in the main repository:
 - Create a new Pull Request, ensuring that the target branch is `develop`.
 - Provide a clear description of your changes and any relevant information for the review process.
+- Optional (but recommended): Use the PR template available at `.github/PULL_REQUEST_TEMPLATE/default.md` to help structure your Pull Request and include all necessary details.
