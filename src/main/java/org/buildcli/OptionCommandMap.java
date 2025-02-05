@@ -2,22 +2,14 @@ package org.buildcli;
 
 import java.util.HashMap;
 
-import org.buildcli.core.ProjectCompiler;
-import org.buildcli.core.ProjectInitializer;
-import org.buildcli.core.ProjectRunner;
-import org.buildcli.core.ProjectTester;
-import org.buildcli.core.ProjectUpdater;
-import org.buildcli.exception.ThrowingComandExecutorWrapper;
-import org.buildcli.utils.*;
-
 public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public OptionCommandMap(OptionCommand optionCommand) {
+  public OptionCommandMap(OptionCommand optionCommand) {
 
-		super();
-		var wrapper = new ThrowingComandExecutorWrapper();
+    super();
+		/*var wrapper = new ThrowingComandExecutorWrapper();
 
 		this.put("-i", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));
 		this.put("--init", () -> wrapper.wrap(() -> new ProjectInitializer().initializeProject(optionCommand.projectName != null ? optionCommand.projectName : "buildcli")));
@@ -51,6 +43,6 @@ public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 		this.put("--about", () -> new BuildCLIIntro().about());
 		this.put("-a", () -> new BuildCLIIntro().about());
 		this.put("--cleanup", () -> DirectoryCleanup.cleanup("target"));
-		this.put("--setup-autocomplete", () -> new AutoCompleteManager().setupAutocomplete());
-	}
+		this.put("--setup-autocomplete", () -> new AutoCompleteManager().setupAutocomplete());*/
+  }
 }

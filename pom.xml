@@ -49,6 +49,11 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.26.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
@@ -73,7 +78,7 @@
 								<!-- Define a classe principal do JAR -->
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>org.buildcli.BuildCLI</mainClass>
+									<mainClass>org.buildcli.CommandLineRunner</mainClass>
 									<manifestEntries>
 										<!-- Define o diretório de origem do JAR -->
 										<Build-Directory>${project.basedir}</Build-Directory>

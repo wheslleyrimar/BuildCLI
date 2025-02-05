@@ -1,7 +1,7 @@
 package org.buildcli.utils;
 
 import jakarta.xml.bind.JAXBContext;
-import org.buildcli.exception.ExtractionRuntimeException;
+import org.buildcli.exceptions.ExtractionRuntimeException;
 import org.buildcli.log.SystemOutLogger;
 import org.buildcli.model.Dependency;
 import org.buildcli.model.Pom;
