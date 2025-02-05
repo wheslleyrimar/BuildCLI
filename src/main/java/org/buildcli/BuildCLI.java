@@ -1,46 +1,17 @@
 package org.buildcli;
 
-import java.util.Objects;
-
-import org.buildcli.log.SystemOutLogger;
-import org.buildcli.log.config.LoggingConfig;
-import org.buildcli.utils.BuildCLIIntro;
-
+import org.buildcli.commands.AboutCommand;
+import org.buildcli.commands.AutocompleteCommand;
+import org.buildcli.commands.ProjectCommand;
+import org.buildcli.commands.VersionCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Mixin;
 
 @Command(name = "BuildCLI", mixinStandardHelpOptions = true,
-         version = "BuildCLI 0.0.12",
-         description = "BuildCLI - A CLI for Java Project Management",
-         subcommands = { CommandLine.HelpCommand.class, picocli.AutoComplete.GenerateCompletion.class }
+    version = "BuildCLI 0.0.14",
+    description = "BuildCLI - A CLI for Java Project Management",
+    subcommands = {AutocompleteCommand.class, ProjectCommand.class, VersionCommand.class, AboutCommand.class, CommandLine.HelpCommand.class}
 )
-public class BuildCLI implements Runnable {
+public class BuildCLI {
 
-    @Mixin
-    private OptionCommand optionCommand;
-
-    public static void main(String[] args) {
-        LoggingConfig.configure();
-
-        int exitCode = new CommandLine(new BuildCLI()).execute(args);
-        System.exit(exitCode);
-    }
-
-    @Override
-    public void run() {
-
-        BuildCLIIntro.welcome();
-
-    	var options = optionCommand.spec.commandLine().getParseResult().originalArgs();
-
-    	if (Objects.isNull(options) || options.isEmpty()) {
-    		SystemOutLogger.log("Welcome to BuildCLI - Java Project Management!");
-    	} else {
-    		var optionsMap = new OptionCommandMap(this.optionCommand);
-    		optionsMap.get(options.iterator().next()).exec();
-    	}
-
-        BuildCLIIntro.checkUpdates();
-    }
 }
