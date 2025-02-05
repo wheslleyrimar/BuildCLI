@@ -1,9 +1,12 @@
 package org.buildcli.core;
 
+import org.buildcli.utils.SystemCommands;
+
 public class ProjectTester extends ProjectExecutor {
 
 	@Override
-	protected void addMvnCommand() {
+	protected void addCommand() {
+		this.command.add(SystemCommands.MVN.getCommand());
 		this.command.add("test");
 	}
 

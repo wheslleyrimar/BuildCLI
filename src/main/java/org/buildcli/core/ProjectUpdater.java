@@ -1,5 +1,7 @@
 package org.buildcli.core;
 
+import org.buildcli.utils.SystemCommands;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +13,8 @@ public class ProjectUpdater extends ProjectExecutor {
 	private boolean isUpdateNow;
 	
 	@Override
-	protected void addMvnCommand() {
+	protected void addCommand() {
+		this.command.add(SystemCommands.MVN.getCommand());
 		this.command.add(this.isUpdateNow ? MVN_LATEST_RELEASES : MVN_CHECK_UPDATES);
 	}
 
