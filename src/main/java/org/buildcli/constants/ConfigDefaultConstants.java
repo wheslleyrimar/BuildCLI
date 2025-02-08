@@ -7,7 +7,7 @@ public abstract class ConfigDefaultConstants {
   }
 
   public static final String BUILD_CLI_CONFIG_FILE_NAME = "buildcli.properties";
-  public static final Path BUILD_CLI_CONFIG_GLOBAL_FILE = Path.of(System.getProperty("user.dir"), ".buildcli", BUILD_CLI_CONFIG_FILE_NAME);
+  public static final Path BUILD_CLI_CONFIG_GLOBAL_FILE = Path.of(System.getProperty("user.home"), ".buildcli", BUILD_CLI_CONFIG_FILE_NAME);
 
 
   //Common Keys

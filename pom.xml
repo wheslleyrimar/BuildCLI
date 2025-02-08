@@ -61,6 +61,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>buildcli</finalName>
 		<plugins>
 			<!-- Plugin para empacotar o JAR com todas as dependências -->
 			<plugin>

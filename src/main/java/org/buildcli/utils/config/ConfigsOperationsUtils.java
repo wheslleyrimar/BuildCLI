@@ -2,8 +2,12 @@ package org.buildcli.utils.config;
 
 import org.buildcli.domain.configs.BuildCLIConfig;
 import org.buildcli.exceptions.ConfigException;
+import org.buildcli.log.SystemOutLogger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Optional;
 
 import static org.buildcli.constants.ConfigDefaultConstants.BUILD_CLI_CONFIG_FILE_NAME;
@@ -39,14 +43,22 @@ class ConfigsOperationsUtils {
   public static void set(BuildCLIConfig buildCLIConfig) {
     var properties = buildCLIConfig.getProperties();
     var file = buildCLIConfig.isLocal() ? new File(BUILD_CLI_CONFIG_FILE_NAME) : BUILD_CLI_CONFIG_GLOBAL_FILE.toFile();
-    try (var fileWriter = new FileWriter(file)) {
+    try {
       var builder = new StringBuilder();
 
-      for (var entry : properties.entrySet()) {
-        builder.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
+      for (var entry : properties) {
+        builder.append(entry.name()).append("=").append(entry.value()).append("\n");
       }
 
-      fileWriter.write(builder.toString());
+      if (!file.getParentFile().exists()) {
+        SystemOutLogger.log("Creating global config file...");
+        file.getParentFile().mkdir();
+        SystemOutLogger.log("Global config file created..");
+      }
+
+      Files.write(file.toPath(), builder.toString().getBytes());
+
+      SystemOutLogger.log("Configs file written to " + file.getAbsolutePath());
 
     } catch (IOException e) {
       throw new ConfigException(e.getMessage());

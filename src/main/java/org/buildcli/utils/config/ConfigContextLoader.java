@@ -8,7 +8,7 @@ public abstract class ConfigContextLoader {
 
   public static BuildCLIConfig getLocalConfig() {
     if (localConfig == null) {
-      localConfig = ConfigsOperationsUtils.getLocal().orElse(null);
+      localConfig = ConfigsOperationsUtils.getLocal().orElse(BuildCLIConfig.empty());
     }
 
     return localConfig;
@@ -16,7 +16,7 @@ public abstract class ConfigContextLoader {
 
   public static BuildCLIConfig getGlobalConfig() {
     if (globalConfig == null) {
-      globalConfig = ConfigsOperationsUtils.getGlobal().orElse(null);
+      globalConfig = ConfigsOperationsUtils.getGlobal().orElse(BuildCLIConfig.empty());
     }
 
     return globalConfig;

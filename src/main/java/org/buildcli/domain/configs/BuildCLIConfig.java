@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BuildCLIConfig {
   private final Properties properties = new Properties();
@@ -19,6 +21,9 @@ public class BuildCLIConfig {
   }
 
   public static BuildCLIConfig from(File file) {
+    if (!file.exists()) {
+      return new BuildCLIConfig();
+    }
     return new BuildCLIConfig(file);
   }
 
@@ -100,15 +105,25 @@ public class BuildCLIConfig {
     this.local = local;
   }
 
-  public Properties getProperties() {
-    return (Properties) Map.copyOf(properties);
+  public Set<ImmutableProperty> getProperties() {
+    return properties.entrySet().stream().map(ImmutableProperty::from).collect(Collectors.toSet());
   }
 
   @Override
   public String toString() {
-    return "BuildCLIConfig{" +
-        "properties=" + properties +
-        '}';
+    var builder = new StringBuilder();
+
+    for (var entry : getProperties()) {
+      builder.append(entry.name).append("=").append(entry.value).append("\n");
+    }
+
+    return builder.toString();
+  }
+
+  public record ImmutableProperty(String name, String value) {
+    public static ImmutableProperty from(Map.Entry<Object, Object> entry) {
+      return new ImmutableProperty(entry.getKey().toString(), entry.getValue().toString());
+    }
   }
 
 }
