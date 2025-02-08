@@ -22,7 +22,6 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
-    working-directory: docs
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,14 +38,17 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install dependencies
+        working-directory: docs
         run: npm install
 
       - name: Build with VitePress
+        working-directory: docs
         run: |
           npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        working-directory: docs
         with:
           path: .vitepress/dist/
 
