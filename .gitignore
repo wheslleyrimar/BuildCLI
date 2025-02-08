@@ -28,6 +28,10 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+/docs/node_modules/
+/docs/.vitepress/dist/
+/docs/.vitepress/node_modules/
+/docs/.vitepress/cache/
 ### VS Code ###
 .vscode/
 
