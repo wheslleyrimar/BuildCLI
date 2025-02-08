@@ -1,9 +1,9 @@
 {
   "type": "module",
   "scripts": {
-    "dev": "../../node_modules/.bin/vitepress dev",
-    "build": "../../node_modules/.bin/vitepress build",
-    "preview": "../../node_modules/.bin/vitepress preview"
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
   },
   "dependencies": {
     "axios": "^1.7.9",
