@@ -5,7 +5,6 @@ import org.buildcli.domain.BuildCLICommand;
 import org.buildcli.domain.configs.BuildCLIConfig;
 import org.buildcli.exceptions.ConfigException;
 import org.buildcli.utils.config.ConfigContextLoader;
-import picocli.CommandLine;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.ParentCommand;
 
@@ -39,14 +38,14 @@ public class AddCommand implements BuildCLICommand {
 
     }
 
-    SaveCommand command = configCommand.isLocal() ? ConfigContextLoader::saveLocalConfig : ConfigContextLoader::saveGlobalConfig;
+    SaveConfig command = configCommand.isLocal() ? ConfigContextLoader::saveLocalConfig : ConfigContextLoader::saveGlobalConfig;
 
     command.save(buildCliConfig);
 
   }
 
   @FunctionalInterface
-  private interface SaveCommand {
+  private interface SaveConfig {
     void save(BuildCLIConfig config) throws ConfigException;
   }
 }

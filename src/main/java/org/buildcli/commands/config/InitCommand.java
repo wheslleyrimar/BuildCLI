@@ -17,7 +17,7 @@ public class InitCommand implements BuildCLICommand {
     var buildConfig = BuildCLIConfig.empty();
     buildConfig.setLocal(configCommand.isLocal());
 
-    SaveConfig saveConfig = buildConfig.isLocal() ? ConfigContextLoader::saveLocalConfig : ConfigContextLoader::saveGlobalConfig;
+    SaveConfig saveConfig = configCommand.isLocal() ? ConfigContextLoader::saveLocalConfig : ConfigContextLoader::saveGlobalConfig;
 
     saveConfig.save(buildConfig);
   }

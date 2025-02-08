@@ -86,8 +86,10 @@ public class BuildCLIConfig {
     properties.setProperty(property, value);
   }
 
-  public void removeProperty(String property) {
-    properties.remove(property);
+  public boolean removeProperty(String property) {
+    var removedProperty = properties.remove(property);
+
+    return removedProperty != null;
   }
 
   public boolean isLocal() {
