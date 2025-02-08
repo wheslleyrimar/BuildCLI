@@ -1,5 +1,6 @@
 package org.buildcli.domain.configs;
 
+import org.buildcli.BuildCLI;
 import org.buildcli.exceptions.ConfigException;
 
 import java.io.File;
@@ -13,6 +14,10 @@ public class BuildCLIConfig {
   private final Properties properties = new Properties();
   private boolean local = true;
 
+  public BuildCLIConfig() {
+
+  }
+
   public static BuildCLIConfig from(File file) {
     return new BuildCLIConfig(file);
   }
@@ -23,6 +28,10 @@ public class BuildCLIConfig {
     } catch (IOException e) {
       throw new ConfigException(e.getMessage());
     }
+  }
+
+  public static BuildCLIConfig empty() {
+    return new BuildCLIConfig();
   }
 
   public Optional<Integer> getPropertyAsInt(String property) {
