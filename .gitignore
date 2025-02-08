@@ -38,3 +38,4 @@ dependency-reduced-pom.xml
 .DS_Store
 
 app.jar
+Dockerfile
