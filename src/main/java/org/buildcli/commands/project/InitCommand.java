@@ -3,6 +3,9 @@ package org.buildcli.commands.project;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.buildcli.domain.BuildCLICommand;
 import org.buildcli.exceptions.CommandExecutorRuntimeException;
@@ -24,20 +27,29 @@ public class InitCommand implements BuildCLICommand {
   @Override
   public void run() {
     String basePackage = "org." + projectName.toLowerCase();
+
     String[] dirs = {
         "src/main/java/" + basePackage.replace('.', '/'),
         "src/main/resources",
         "src/test/java/" + basePackage.replace('.', '/')
     };
-
-    for (String dir : dirs) {
-      File directory = new File(dir);
-      if (directory.mkdirs()) {
-        SystemOutLogger.log("Directory created: " + dir);
-      }
-    }
-
     try {
+      Path currentDir = Paths.get("").toAbsolutePath();
+
+      if(Files.walk(currentDir)
+              .filter(Files::isRegularFile)
+              .anyMatch(path -> path.endsWith("pom.xml"))){
+        SystemOutLogger.log("A project already exists in this directory. Please choose a different location or remove the existing project.");
+        return;
+      }
+
+      for (String dir : dirs) {
+        File directory = new File(dir);
+        if (directory.mkdirs()) {
+          SystemOutLogger.log("Directory created: " + dir);
+        }
+      }
+
       createReadme(projectName);
       createMainClass(basePackage);
       createPomFile(projectName);
