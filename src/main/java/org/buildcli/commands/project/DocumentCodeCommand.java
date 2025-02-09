@@ -10,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Command(name = "document-code", aliases = {"docs"}, description = "Generates documentation for the specified code files.", mixinStandardHelpOptions = true)
+@Command(name = "document-code", aliases = {"docs"}, description = "Generates documentation for the specified code files, alias: 'docs'.", mixinStandardHelpOptions = true)
 public class DocumentCodeCommand implements BuildCLICommand {
   private final ExecutorService executorService = Executors.newCachedThreadPool();
 
