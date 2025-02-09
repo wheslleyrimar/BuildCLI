@@ -1,16 +1,22 @@
 package org.buildcli.commands.project;
 
-import org.buildcli.domain.BuildCLICommand;
-import org.buildcli.utils.CodeDocumenter;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Parameters;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Command(name = "document-code", aliases = {"docs"}, description = "", mixinStandardHelpOptions = true)
+import org.buildcli.domain.BuildCLICommand;
+import org.buildcli.utils.CodeDocumenter;
+
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Parameters;
+
+@Command(
+    name = "document-code",
+    aliases = {"docs"},
+    description = "Generates documentation for the project code. Alias: 'docs'. This command scans the specified files and extracts structured documentation.",
+    mixinStandardHelpOptions = true
+)
 public class DocumentCodeCommand implements BuildCLICommand {
   private final ExecutorService executorService = Executors.newCachedThreadPool();
 
