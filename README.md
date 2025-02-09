@@ -135,7 +135,7 @@ This command sends the specified Java file to the local Ollama server, which gen
 ### 7. Set Active Environment Profile
 Sets the active environment profile, saving it to the `environment.config` file. The profile is referenced during project execution, ensuring that the correct configuration is loaded.
 ```bash
-buildcli p set dev
+buildcli p set env dev
 ```
 After running this command, the active profile is set to dev, and the `environment.config` file is updated accordingly.
 
@@ -151,7 +151,7 @@ buildcli p add dockerfile
 ### 9. Docker Build Command
 This command automatically builds and runs the Docker container for you. After running the command, the Docker image will be created, and your project will run inside the container.
 ```bash
-buildcli project build
+buildcli project run docker
 ```
 
 ### 10. Set Up CI/CD Integration
