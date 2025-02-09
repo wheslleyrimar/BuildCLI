@@ -4,7 +4,7 @@ import org.buildcli.commands.project.rm.DependencyCommand;
 import org.buildcli.commands.project.rm.ProfileCommand;
 import picocli.CommandLine.Command;
 
-@Command(name = "remove", aliases = {"rm"}, description = "",
+@Command(name = "remove", aliases = {"rm"}, description = "removes dependencies and profiles from the project.",
     subcommands = {DependencyCommand.class, ProfileCommand.class},
     mixinStandardHelpOptions = true
 )
