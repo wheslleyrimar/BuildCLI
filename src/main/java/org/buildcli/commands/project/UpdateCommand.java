@@ -5,7 +5,7 @@ import org.buildcli.commands.project.update.VersionCommand;
 import picocli.CommandLine.Command;
 
 @Command(name = "update", aliases = {"up"},
- description = "Updates project dependencies and settings. Alias: 'up'. This command allows updating dependencies and configuration settings to keep the project up to date.", mixinStandardHelpOptions = true,
+ description = "Updates project dependencies and version. Alias: 'up'. Use this command to keep dependencies up to date and update the project version.", mixinStandardHelpOptions = true,
     subcommands = {VersionCommand.class, DependencyCommand.class}
 )
 public class UpdateCommand {
