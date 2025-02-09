@@ -1,16 +1,22 @@
 package org.buildcli.commands.project;
 
-import org.buildcli.domain.BuildCLICommand;
-import org.buildcli.exceptions.CommandExecutorRuntimeException;
-import org.buildcli.log.SystemOutLogger;
-import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-@Command(name = "init", aliases ={"i"}, description = "", mixinStandardHelpOptions = true)
+import org.buildcli.domain.BuildCLICommand;
+import org.buildcli.exceptions.CommandExecutorRuntimeException;
+import org.buildcli.log.SystemOutLogger;
+
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
+
+@Command(
+    name = "init",
+    aliases = {"i"},
+    description = "Initializes a new project. Alias: 'i'. This command sets up a new project structure.",
+    mixinStandardHelpOptions = true
+)
 public class InitCommand implements BuildCLICommand {
   @Option(names = {"--name", "-n"}, defaultValue = "buildcli")
   private String projectName;
