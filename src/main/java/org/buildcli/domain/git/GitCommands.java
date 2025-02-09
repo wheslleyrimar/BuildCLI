@@ -33,6 +33,10 @@ public final class GitCommands {
     public static final String REV_PARSE = "rev-parse";
     public static final String ONELINE = "--oneline";
 
+    public static final String REV_LIST = "rev-list";
+    public static final String COUNT = "--count";
+    public static final String RANGE = "..";
+    public static final String HEAD = "HEAD";
 
 
     private GitCommands() {

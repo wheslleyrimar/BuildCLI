@@ -199,9 +199,8 @@ public class GitCommandExecutor {
         String gitDir = getGitDir(gitPath), workTree = getWorkTree(gitPath);
 
         runGitCommand(GIT, gitDir, workTree, FETCH, ORIGIN_MAIN);
-        String gitDiffResult = runGitCommandAndShowOutput(GIT, gitDir, workTree, DIFF ,EXIT_CODE, ORIGIN_MAIN);
-
-        return gitDiffResult.isBlank();
+        String gitRevListCountResult = runGitCommandAndShowOutput(GIT, gitDir, workTree,REV_LIST,COUNT,HEAD+RANGE+ORIGIN_MAIN);
+        return Integer.parseInt(gitRevListCountResult.trim()) == 0;
     }
 
     public void updateLocalRepository(){
