@@ -38,3 +38,5 @@ dependency-reduced-pom.xml
 .DS_Store
 
 app.jar
+buildcli.jar
+Dockefile
