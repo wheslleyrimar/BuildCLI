@@ -1,13 +1,24 @@
 package org.buildcli.domain.git;
 
 import org.buildcli.log.SystemOutLogger;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.URIish;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.StreamSupport;
 
 import static org.buildcli.domain.git.GitCommands.*;
 import static org.buildcli.domain.git.GitCommandFormatter.*;
@@ -15,6 +26,71 @@ import static org.buildcli.domain.git.GitCommandFormatter.*;
 public class GitCommandExecutor {
 
     private static final Logger logger = Logger.getLogger(GitCommandExecutor.class.getName());
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GitCommandExecutor.class);
+
+    private Git git;
+    private Repository repository;
+
+    private Git openGitRepository(String path) {
+        try {
+            File repoDir = new File(path);
+            git = Git.open(repoDir);
+            return git;
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error opening Git repository", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void setRemoteUrl(String url){
+        try {
+            git.remoteSetUrl().setRemoteUri(new URIish(url));
+        } catch (URISyntaxException e) {
+            logger.log(Level.SEVERE, "Error setting Git remote url", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void gitFetch(){
+        try {
+            git.fetch().call();
+        } catch (GitAPIException e) {
+            logger.log(Level.SEVERE, "Error executing git fetch command", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Repository getRepository(){
+        return git.getRepository();
+    }
+
+    private ObjectId checkRemoteHeadCommits(){
+        try {
+            ObjectId remoteHead = repository.resolve("origin/main^{tree}");
+            if (remoteHead != null){
+                return remoteHead;
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error resolving remote Head commits");
+        }
+        return null;
+    }
+
+    private ObjectId checkLocalHeadCommits(){
+        try {
+            ObjectId localHead = repository.resolve("HEAD^{tree}");
+            if (localHead != null){
+                return localHead;
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Error resolving local Head commits");
+        }
+        return null;
+    }
+
+    private void closeGitRepository(Git git){
+        git.close();
+    }
 
     protected int runGitCommand(String... command) {
         try {
@@ -57,17 +133,46 @@ public class GitCommandExecutor {
         return output.toString();
     }
 
+    private Iterable<RevCommit> gitLog(){
+        try {
+            return git.log().addPath("src/main/java").call();
+        } catch (GitAPIException e) {
+            logger.log(Level.SEVERE, "Error executing git log command", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Iterable<RevCommit> gitgitLogOnlyCommitsNotInLocal(ObjectId localHead, ObjectId remoteHead){
+        try {
+            return git.log()
+                    .not(localHead)
+                    .add(remoteHead)
+                    .call();
+        } catch (GitAPIException | MissingObjectException | IncorrectObjectTypeException e) {
+            logger.log(Level.SEVERE, "Error executing git log command", e);
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
     public void showContributors(String gitPath) {
-        String localGit = getGitDir(gitPath),
-                workTree = getWorkTree(gitPath);
+        gitPath = "/media/omatheusmesmo/FileShare/buildcli";
+        git = openGitRepository(gitPath);
+        setRemoteUrl("https://github.com/wheslleyrimar/BuildCLI.git");
 
-        String command =String.join(" ",GIT,localGit, workTree, LOG, FORMAT_CONTRIBUTORS, SORT_UNIQUE);
-        String contributors = runGitCommandAndShowOutput("sh", "-c",command);
+        gitFetch();
 
-        SystemOutLogger.log("Contributors:\n");
-        SystemOutLogger.log(contributors);
+        repository = getRepository();
+
+        checkLocalHeadCommits();
+        checkRemoteHeadCommits();
+
+        Iterable<RevCommit> contributors = gitLog();
+
+        SystemOutLogger.log("Contributors: "+ distinctContributors(contributors));
+
+        closeGitRepository(git);
     }
 
     public String getDirectory() {
