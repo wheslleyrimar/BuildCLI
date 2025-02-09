@@ -1,9 +1,12 @@
-package org.buildcli.actions.ai;
+package org.buildcli.actions.ai.service;
 
-import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.jlama.JlamaChatModel;
 import dev.langchain4j.model.jlama.JlamaChatModel.JlamaChatModelBuilder;
+import org.buildcli.actions.ai.AIChat;
+import org.buildcli.actions.ai.AIService;
+import org.buildcli.constants.AIConstants;
 
 import java.nio.file.Path;
 
@@ -20,16 +23,19 @@ public class JLamaAIService implements AIService {
 
   @Override
   public String generate(AIChat chat) {
-
-    var response = model.generate(new SystemMessage(""));
+    var response = model.generate(new SystemMessage(AIConstants.COMMENT_CODE_PROMPT), new UserMessage(chat.getMessage()));
 
     return response.content().text();
+  }
+
+  public static Builder builder() {
+    return new Builder();
   }
 
   public static class Builder {
     private final JlamaChatModelBuilder builder;
 
-    public Builder() {
+    private Builder() {
       builder = new JlamaChatModelBuilder();
       var path = Path.of(System.getProperty("user.home"), ".buildcli", "ai", "jlama");
 

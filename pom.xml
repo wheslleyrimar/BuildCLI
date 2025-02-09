@@ -62,12 +62,18 @@
 		<!-- Langchain4j dependencies group -->
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
+			<artifactId>langchain4j-ollama</artifactId>
+			<version>0.36.1</version>
+		</dependency>
+		<dependency>
+			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j-jlama</artifactId>
 			<version>0.36.1</version>
 		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>buildcli</finalName>
 		<plugins>
 			<!-- Plugin para empacotar o JAR com todas as dependências -->
 			<plugin>

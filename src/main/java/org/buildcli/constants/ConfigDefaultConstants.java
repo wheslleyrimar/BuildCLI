@@ -3,6 +3,7 @@ package org.buildcli.constants;
 import java.nio.file.Path;
 
 public abstract class ConfigDefaultConstants {
+
   private ConfigDefaultConstants() {
   }
 
@@ -22,6 +23,14 @@ public abstract class ConfigDefaultConstants {
   //Project
   public static final String PROJECT_NAME = composePropertyName(LOGGING_PARENT, "project", "name");
   public static final String PROJECT_TYPE = composePropertyName(LOGGING_PARENT, "project", "type");
+
+  //AI
+  public static final String AI_PARENT = "ai";
+  public static final String AI_VENDOR = composePropertyName(AI_PARENT, "vendor");
+  public static final String AI_MODEL = composePropertyName(AI_PARENT, "model");
+  public static final String AI_URL = composePropertyName(AI_PARENT, "url");
+  public static final String AI_TOKEN = composePropertyName(AI_PARENT, "token");
+
 
   public static String composePropertyName(String... names) {
     var builder = new StringBuilder("buildcli.");
