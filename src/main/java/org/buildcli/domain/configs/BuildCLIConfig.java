@@ -1,23 +1,15 @@
 package org.buildcli.domain.configs;
-
-import org.buildcli.BuildCLI;
 import org.buildcli.exceptions.ConfigException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BuildCLIConfig {
   private final Properties properties = new Properties();
   private boolean local = true;
 
-  public BuildCLIConfig() {
-
+  private BuildCLIConfig() {
   }
 
   public static BuildCLIConfig from(File file) {
@@ -28,10 +20,10 @@ public class BuildCLIConfig {
   }
 
   private BuildCLIConfig(File file) {
-    try {
-      this.properties.load(new FileInputStream(file));
+    try (var inputStream = new FileInputStream(file)) {
+      this.properties.load(inputStream);
     } catch (IOException e) {
-      throw new ConfigException(e.getMessage());
+      throw new ConfigException("Error loading config from file: " + file.getAbsolutePath(), e);
     }
   }
 
@@ -40,61 +32,38 @@ public class BuildCLIConfig {
   }
 
   public Optional<Integer> getPropertyAsInt(String property) {
-    var value = properties.getProperty(property);
-
-    if (value != null) {
-      return Optional.of(Integer.parseInt(value));
+    try {
+      return Optional.of(Integer.parseInt(properties.getProperty(property)));
+    } catch (NumberFormatException e) {
+      throw new ConfigException("Invalid integer value for property: " + property, e);
     }
-
-    return Optional.empty();
   }
 
   public Optional<Double> getPropertyAsDouble(String property) {
-    var value = properties.getProperty(property);
-
-    if (value != null) {
-      return Optional.of(Double.parseDouble(value));
+    try {
+      return Optional.of(Double.parseDouble(properties.getProperty(property)));
+    } catch (NumberFormatException e) {
+      throw new ConfigException("Invalid double value for property: " + property, e);
     }
-
-    return Optional.empty();
   }
 
   public Optional<Boolean> getPropertyAsBoolean(String property) {
-    var value = properties.getProperty(property);
-
-    if (value != null) {
-      return Optional.of(Boolean.parseBoolean(value));
-    }
-
-    return Optional.empty();
+    return Optional.of(Boolean.parseBoolean(properties.getProperty(property)));
   }
 
-  public Optional<String> getProperty(String property) {
-    var value = properties.getProperty(property);
-
-    if (value != null) {
-      return Optional.of(value);
-    }
-
-    return Optional.empty();
-  }
-
-  public String getProperty(String property, String defaultValue) {
-    return properties.getProperty(property, defaultValue);
+  public Optional<String> getProperty(String property, String defaultValue) {
+    return Optional.ofNullable(properties.getProperty(property, defaultValue));
   }
 
   public void addOrSetProperty(String property, String value) {
     if (property != null && property.contains(" ")) {
-      throw new ConfigException("property name contains whitespace");
+      throw new ConfigException("Property name contains whitespace");
     }
-
     properties.setProperty(property, value);
   }
 
   public boolean removeProperty(String property) {
-    var removedProperty = properties.remove(property);
-
-    return removedProperty != null;
+    return properties.remove(property) != null;
   }
 
   public boolean isLocal() {
@@ -106,18 +75,16 @@ public class BuildCLIConfig {
   }
 
   public Set<ImmutableProperty> getProperties() {
-    return properties.entrySet().stream().map(ImmutableProperty::from).collect(Collectors.toSet());
+    return properties.entrySet().stream()
+        .map(ImmutableProperty::from)
+        .collect(Collectors.toSet());
   }
 
   @Override
   public String toString() {
-    var builder = new StringBuilder();
-
-    for (var entry : getProperties()) {
-      builder.append(entry.name).append("=").append(entry.value).append("\n");
-    }
-
-    return builder.toString();
+    return properties.entrySet().stream()
+        .map(entry -> entry.getKey() + "=" + entry.getValue())
+        .collect(Collectors.joining("\n"));
   }
 
   public record ImmutableProperty(String name, String value) {
@@ -125,5 +92,4 @@ public class BuildCLIConfig {
       return new ImmutableProperty(entry.getKey().toString(), entry.getValue().toString());
     }
   }
-
 }

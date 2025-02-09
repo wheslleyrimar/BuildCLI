@@ -49,7 +49,7 @@ public class SetCommand implements BuildCLICommand {
    * - Keys: Alphanumeric with optional dashes and dots for hierarchy.
    * - Values: Alphanumeric, dashes, dots, and numeric values allowed.
    */
-  private static final Pattern CONFIG_PATTERN = Pattern.compile("^[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*=[A-Za-z0-9.-]+$");
+  private static final Pattern CONFIG_PATTERN = Pattern.compile("^[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*=.*$");
 
   /**
    * Executes the "set" command, updating configuration settings accordingly.
@@ -69,8 +69,11 @@ public class SetCommand implements BuildCLICommand {
       if (!isValidConfigFormat(config)) {
         throw new ConfigException("Invalid configuration format: '" + config + "'. Expected format: <key>=<value>.");
       }
-      String[] splitValue = config.split("=", 2);
-      buildCliConfig.addOrSetProperty(splitValue[0].trim(), splitValue[1].trim());
+      int separatorIndex = config.indexOf('=');
+      String key = config.substring(0, separatorIndex).trim();
+      String value = config.substring(separatorIndex + 1).trim();
+
+      buildCliConfig.addOrSetProperty(key.trim(), value.trim());
     }
 
     SaveConfig saveConfigFunction = isLocalScope ? ConfigContextLoader::saveLocalConfig : ConfigContextLoader::saveGlobalConfig;

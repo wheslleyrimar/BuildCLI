@@ -5,7 +5,6 @@ import org.buildcli.exceptions.ConfigException;
 import org.buildcli.log.SystemOutLogger;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Optional;
@@ -14,35 +13,29 @@ import static org.buildcli.constants.ConfigDefaultConstants.BUILD_CLI_CONFIG_FIL
 import static org.buildcli.constants.ConfigDefaultConstants.BUILD_CLI_CONFIG_GLOBAL_FILE;
 
 class ConfigsOperationsUtils {
-  public static Optional<BuildCLIConfig> getLocal() {
-    var file = new File(BUILD_CLI_CONFIG_FILE_NAME);
 
+  private static Optional<BuildCLIConfig> loadConfig(File file, boolean isLocal) {
     if (!file.exists()) {
       return Optional.empty();
     }
 
     var buildCLIConfig = BuildCLIConfig.from(file);
-    buildCLIConfig.setLocal(true);
-
+    buildCLIConfig.setLocal(isLocal);
     return Optional.of(buildCLIConfig);
   }
 
+  public static Optional<BuildCLIConfig> getLocal() {
+    return loadConfig(new File(BUILD_CLI_CONFIG_FILE_NAME), true);
+  }
+
   public static Optional<BuildCLIConfig> getGlobal() {
-    var file = BUILD_CLI_CONFIG_GLOBAL_FILE.toFile();
-
-    if (!file.exists()) {
-      return Optional.empty();
-    }
-
-    var buildCLIConfig = BuildCLIConfig.from(file);
-    buildCLIConfig.setLocal(false);
-
-    return Optional.of(buildCLIConfig);
+    return loadConfig(BUILD_CLI_CONFIG_GLOBAL_FILE.toFile(), false);
   }
 
   public static void set(BuildCLIConfig buildCLIConfig) {
     var properties = buildCLIConfig.getProperties();
     var file = buildCLIConfig.isLocal() ? new File(BUILD_CLI_CONFIG_FILE_NAME) : BUILD_CLI_CONFIG_GLOBAL_FILE.toFile();
+
     try {
       var builder = new StringBuilder();
 
@@ -50,18 +43,18 @@ class ConfigsOperationsUtils {
         builder.append(entry.name()).append("=").append(entry.value()).append("\n");
       }
 
-      if (!file.getParentFile().exists()) {
-        SystemOutLogger.log("Creating global config file...");
-        file.getParentFile().mkdir();
-        SystemOutLogger.log("Global config file created..");
+      File parent = file.getParentFile();
+      if (parent != null && !parent.exists()) {
+        SystemOutLogger.log("Creating global config directory...");
+        parent.mkdirs();
       }
 
-      Files.write(file.toPath(), builder.toString().getBytes());
+      Files.writeString(file.toPath(), builder.toString());
 
-      SystemOutLogger.log("Configs file written to " + file.getAbsolutePath());
+      SystemOutLogger.log("Config file saved at " + file.getAbsolutePath());
 
     } catch (IOException e) {
-      throw new ConfigException(e.getMessage());
+      throw new ConfigException("Error writing config file", e);
     }
   }
 }
