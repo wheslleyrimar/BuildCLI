@@ -157,7 +157,6 @@ public class GitCommandExecutor {
 
 
     public void showContributors(String gitPath) {
-        gitPath = "/media/omatheusmesmo/FileShare/buildcli";
         git = openGitRepository(gitPath);
         setRemoteUrl("https://github.com/wheslleyrimar/BuildCLI.git");
 
