@@ -56,12 +56,28 @@ Welcome to BuildCLI - Java Project Management!
    mvn package
    ```
 
-   3. **Set up BuildCLI for Global Access**:
-       - Copy the `buildcli` file to a directory in your system PATH, such as `~/bin`:
-         ```bash
-         cp target/BuildCLI-1.0-SNAPSHOT.jar ~/bin/buildcli
-         chmod +x ~/bin/buildcli
-         ```
+3. **Set up BuildCLI for Global Access**:
+- Copy the `buildcli` file to a directory in your system PATH, such as `~/bin`:
+   ```bash
+   cp target/BuildCLI-1.0-SNAPSHOT.jar ~/bin/
+  ```
+- Create a wrapper script:
+  ```bash 
+   nano ~/bin/buildcli
+   ```
+- Insert the following content into the file:
+   ```bash
+  #!/bin/bash
+   java -jar "$HOME/bin/BuildCLI-1.0-SNAPSHOT.jar" "$@"
+   ```
+- Save and exit Nano:
+  - Press CTRL + O, then Enter to save.
+  - Press CTRL + X to exit.
+  
+- Make the script executable:
+     ```bash
+     chmod +x ~/bin/buildcli
+     ```
 
 Now `BuildCLI` is ready to use. Test the `buildcli` command in the terminal.
 
