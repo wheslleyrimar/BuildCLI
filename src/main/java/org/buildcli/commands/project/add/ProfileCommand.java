@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Command(name = "profile", aliases = {"p"}, description = "", mixinStandardHelpOptions = true)
+@Command(name = "profile", aliases = {"p"}, description = "Adds a new dependency to the project. Alias: 'p'. "
+        + "This command allows adding profile file (e.g., test, dev, production) with extension .properties.",
+        mixinStandardHelpOptions = true)
 public class ProfileCommand implements BuildCLICommand {
   private final Logger LOGGER = Logger.getLogger(ProfileCommand.class.getName());
 
