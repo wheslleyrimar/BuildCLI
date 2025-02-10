@@ -56,12 +56,12 @@ Welcome to BuildCLI - Java Project Management!
    mvn package
    ```
 
-3. **Set up BuildCLI for Global Access**:
-    - Copy the `buildcli` file to a directory in your system PATH, such as `~/bin`:
-      ```bash
-      cp target/buildcli ~/bin/buildcli
-      chmod +x ~/bin/buildcli
-      ```
+   3. **Set up BuildCLI for Global Access**:
+       - Copy the `buildcli` file to a directory in your system PATH, such as `~/bin`:
+         ```bash
+         cp target/BuildCLI-1.0-SNAPSHOT.jar ~/bin/buildcli
+         chmod +x ~/bin/buildcli
+         ```
 
 Now `BuildCLI` is ready to use. Test the `buildcli` command in the terminal.
 
@@ -69,32 +69,7 @@ Now `BuildCLI` is ready to use. Test the `buildcli` command in the terminal.
 
 ## Usage
 
-Below are the main commands of `BuildCLI`. For more information about each command, you can run `buildcli --help`.
-
-```plaintext
-Usage: buildcli [OPTIONS]
-Options:
-  -i, --init                Initializes a new Java project
-  -c, --compile             Compiles the Java project
-      --add-dependency      Adds a dependency to the pom.xml in the 'groupId:artifactId' or 'groupId:artifactId:version' format
-      --rm-dependency       Remove a dependency in 'groupId:artifactId' format
-  -p, --profile             Creates a configuration profile (e.g., dev, test)
-  -e, --set-environment     Sets the active profile for the environment (dev, test, prod) by updating `environment.config`
-      --run                 Runs the Java project
-  -d, --document-code       [Beta] Generates documentation for a Java file using AI (e.g., `buildcli -d <path-to-file>.java`)
-  -u, --update              Check for dependency updates
-      --update-now          Update dependencies to latest versions
-  -t, --test                Run tests
-      --dockerize           Generate a Dockerfile for the project
-      --docker-build        Build and run the Docker container
-      --semver              Manage semantic versioning (major, minor, patch)
-      --release             Automate release by creating a Git tag and changelog
-      --cicd-config         Configure CI/CD for the specified tool (e.g., github, gitlab, jenkins)
-  -h, --help                Shows help
-  -V, --version             Shows the version of BuildCLI
-  -a, --about               Displays project information, including its purpose, repository, and contributors.
-      --setup-autocomplete  Set up autocomplete for Bash, Zsh, or Fish
-```
+We made a major refactor of the `BuildCLI` architecture. Please use the `buildcli help` command to see all available options. Also, refer to issue [#89](https://github.com/wheslleyrimar/BuildCLI/issues/89) and pull request [#79](https://github.com/wheslleyrimar/BuildCLI/pull/79) for more details.
 
 ---
 
@@ -107,13 +82,13 @@ You can specify a project name to dynamically set the package structure and proj
 #### Example Commands
 - To initialize a project with a specific name:
 ```bash
-buildcli --init MyProject
+buildcli project init MyProject
 ```
 This will create the project structure with `MyProject` as the base package name, resulting in a directory like `src/main/java/org/myproject`.
 
 - To initialize a project without specifying a name:
 ```bash
-buildcli --init
+buildcli project init
 ```
 This will create the project structure with `buildcli` as the base package name, resulting in a directory like `src/main/java/org/buildcli`.
 
@@ -121,7 +96,7 @@ This will create the project structure with `buildcli` as the base package name,
 ### 2. Compile the Project
 Compiles the Java project using Maven:
 ```bash
-buildcli --compile
+buildcli project build --compile
 ```
 
 ### 3. Add a Dependency to `pom.xml`
@@ -130,37 +105,37 @@ Adds a dependency to the project in the `groupId:artifactId` format. You can als
 #### Example Commands:
 - To add a dependency with the latest version:
 ```bash
-  buildcli --add-dependency org.springframework:spring-core
+  buildcli project add dependency org.springframework:spring-core
 ```
 - To add a dependency with a specified version:
 ```bash
-  buildcli --add-dependency org.springframework:spring-core:5.3.21
+  buildcli p a d org.springframework:spring-core:5.3.21
 ```
 After executing these commands, the dependency will be appended to your pom.xml file under the `<dependencies>` section.
 
 ### 4. Create a Configuration Profile
 Creates a configuration file with the specified profile, for example, `application-dev.properties`:
 ```bash
-buildcli --profile dev
+buildcli project add profile dev
 ```
 
 ### 5. Run the Project
 Runs the Java project using Spring Boot:
 ```bash
-buildcli --run
+buildcli project run
 ```
 
 ### 6. Generate Documentation for Java Code
 Automatically generates inline documentation for a Java file using AI:
 ```bash
-buildcli --document-code File.java
+buildcli project document-code File.java
 ```
 This command sends the specified Java file to the local Ollama server, which generates documentation and comments directly within the code. The modified file with documentation will be saved back to the same location.
 
 ### 7. Set Active Environment Profile
 Sets the active environment profile, saving it to the `environment.config` file. The profile is referenced during project execution, ensuring that the correct configuration is loaded.
 ```bash
-buildcli --set-environment dev
+buildcli p set env dev
 ```
 After running this command, the active profile is set to dev, and the `environment.config` file is updated accordingly.
 
@@ -170,27 +145,27 @@ With the `--set-environment` functionality, you can set the active environment p
 ### 8. Dockerize Command
 This command generates a `Dockerfile` for your Java project, making it easier to containerize your application.
 ```bash
-buildcli --dockerize
+buildcli p add dockerfile
 ```
 
 ### 9. Docker Build Command
 This command automatically builds and runs the Docker container for you. After running the command, the Docker image will be created, and your project will run inside the container.
 ```bash
-buildcli --docker-build
+buildcli project run docker
 ```
 
 ### 10. Set Up CI/CD Integration
 Generates configuration files for CI/CD tools and prepares the project for automated pipelines. Supports Jenkins, Gitlab and Github Actions.
 ```bash
-buildcli --cicd-config github
+buildcli project add pipeline github
 ```
 
 ```bash
-buildcli --cicd-config gitlab
+buildcli project add pipeline gitlab
 ```
 
 ```bash
-buildcli --cicd-config jenkins
+buildcli project add pipeline jenkins
 ```
 
 ---
@@ -198,7 +173,7 @@ buildcli --cicd-config jenkins
 ## Prerequisites
 
 ### Local Ollama API
-Ensure you have the Ollama server running locally, as the `--document-code` functionality relies on an AI model accessible via a local API.
+Ensure you have the Ollama server running locally, as the `docs` functionality relies on an AI model accessible via a local API.
 - [Download Ollama](https://ollama.com/download)
 
 You can start the Ollama server by running:
@@ -216,8 +191,9 @@ ollama run llama3.2
 ## Contribution
 
 Contributions are welcome! Feel free to open **Issues** and submit **Pull Requests**.
+See the [CONTRIBUTING.md](CONTRIBUTING.md) file for more details.
 
-To contribute:
+Quick steps to contribute:
 1. Fork the project.
 2. Create a branch for your changes:
    ```bash
