@@ -4,7 +4,7 @@ import org.buildcli.commands.code.DocumentCommand;
 import org.buildcli.commands.project.*;
 import picocli.CommandLine.Command;
 
-@Command(name = "project", aliases = {"p"}, description = "",
+@Command(name = "project", aliases = {"p"}, description = "Manage and create Java projects, alias: 'p'.",
     subcommands = {
         AddCommand.class, RmCommand.class, BuildCommand.class, SetCommand.class,
         TestCommand.class, RunCommand.class, InitCommand.class, CleanupCommand.class,
