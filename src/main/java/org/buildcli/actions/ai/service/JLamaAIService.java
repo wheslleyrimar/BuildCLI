@@ -6,9 +6,12 @@ import dev.langchain4j.model.jlama.JlamaChatModel;
 import dev.langchain4j.model.jlama.JlamaChatModel.JlamaChatModelBuilder;
 import org.buildcli.actions.ai.AIChat;
 import org.buildcli.actions.ai.AIService;
-import org.buildcli.constants.AIConstants;
 
 import java.nio.file.Path;
+import java.util.Arrays;
+
+import static org.buildcli.utils.ia.CodeUtils.endCode;
+import static org.buildcli.utils.ia.CodeUtils.startCode;
 
 public class JLamaAIService implements AIService {
   private final JlamaChatModel model;
@@ -23,9 +26,21 @@ public class JLamaAIService implements AIService {
 
   @Override
   public String generate(AIChat chat) {
-    var response = model.generate(new SystemMessage(AIConstants.COMMENT_CODE_PROMPT), new UserMessage(chat.getMessage()));
+    var aiMessageResponse = model.generate(
+        new SystemMessage(chat.getSystemMessage()),
+        new UserMessage(chat.getUserMessage())
+    );
 
-    return response.content().text();
+    var content = aiMessageResponse.content().text();
+
+    int codeStart = startCode(content);
+    int codeEnd = endCode(content);
+
+    if (codeStart != -1 && codeEnd != -1) {
+      content = content.substring(codeStart, codeEnd).trim();
+    }
+
+    return content;
   }
 
   public static Builder builder() {

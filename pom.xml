@@ -59,6 +59,24 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>1.5.16</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>2.0.16</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.5.16</version>
+		</dependency>
+
 		<!-- Langchain4j dependencies group -->
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
@@ -115,6 +133,20 @@
                     <target>21</target>
                 </configuration>
             </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkCount>1</forkCount>
+					<argLine>
+						--add-modules=jdk.incubator.vector
+						--add-exports java.base/sun.nio.ch=ALL-UNNAMED
+						--enable-preview
+						--enable-native-access=ALL-UNNAMED
+						--add-exports java.base/jdk.internal.vm.vector=ALL-UNNAMED
+					</argLine>
+				</configuration>
+			</plugin>
         </plugins>
 	</build>
 </project>

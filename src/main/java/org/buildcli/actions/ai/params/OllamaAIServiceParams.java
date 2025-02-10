@@ -26,4 +26,12 @@ public class OllamaAIServiceParams implements AIServiceParams {
   public String url() {
     return url;
   }
+
+  @Override
+  public String toString() {
+    return "OllamaAIServiceParams{" +
+        "url='" + url + '\'' +
+        ", modelName='" + modelName + '\'' +
+        '}';
+  }
 }

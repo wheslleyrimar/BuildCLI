@@ -1,16 +1,21 @@
 package org.buildcli.utils.filesystem;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class FindFilesUtils {
+  private static final Logger logger = LoggerFactory.getLogger(FindFilesUtils.class);
   private FindFilesUtils() {
   }
 
   public static List<File> search(File dir, String...extensions) {
     List<File> files = new ArrayList<>();
     if (dir.isDirectory()) {
+      logger.info("Searching for directory {}", dir);
       var listFiles = dir.listFiles();
       if (listFiles == null || listFiles.length == 0) {
         return files;
@@ -23,10 +28,12 @@ public abstract class FindFilesUtils {
         }
 
         if (endsWith(file, extensions)) {
+          logger.info("Found file {}", file);
           files.add(file);
         }
       }
-    } else if (dir.isFile()) {
+    } else if (dir.isFile() && endsWith(dir, extensions)) {
+      logger.info("Found file {}", dir);
       files.add(dir);
     }
 

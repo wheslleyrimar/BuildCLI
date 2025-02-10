@@ -1,4 +1,4 @@
-package org.buildcli.commands.project;
+package org.buildcli.commands.code;
 
 import org.buildcli.actions.ai.AIChat;
 import org.buildcli.actions.ai.AIServiceParams;
@@ -12,12 +12,15 @@ import org.buildcli.utils.config.ConfigContextLoader;
 import org.buildcli.utils.filesystem.FindFilesUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -28,30 +31,46 @@ import java.util.function.Supplier;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
-@Command(name = "document-code", aliases = {"docs"}, description = "", mixinStandardHelpOptions = true)
-public class DocumentCodeCommand implements BuildCLICommand {
-  private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
-  private final Logger logger = LoggerFactory.getLogger("DocumentCodeCommand");
+@Command(name = "document", aliases = {"docs"}, description = "Command to comment sources", mixinStandardHelpOptions = true)
+public class DocumentCommand implements BuildCLICommand {
+  @ArgGroup
+  private IAModel model;
 
-  @Parameters
-  private List<String> files;
+  private final ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+  private final Logger logger = LoggerFactory.getLogger("CodeDocumentCommand");
+
+  @Parameters(description = "Set of files or directories to comment sources")
+  private List<File> files;
+
+  @Option(names = {"--extensions", "--ext"}, description = "To filter files by", defaultValue = "java, kt, scala, groovy", paramLabel = "java, kt, scala, groovy")
+  private String extensions;
+
+  public static class IAModel {
+    @Option(names = "--jlama")
+    public boolean isJlama;
+    @Option(names = "--ollama")
+    public boolean isOllama;
+  }
 
   private final BuildCLIConfig allConfigs = ConfigContextLoader.getAllConfigs();
 
 
   @Override
   public void run() {
+    logger.warn("Use this command with careful, IA may be crazy!");
+
     if (files == null || files.isEmpty()) {
+      logger.info("No files specified");
       return;
     }
 
-    logger.info("Loading files...");
+    logger.info("Loading files with extensions: {}", Arrays.toString(getExtensions()));
     var targetFiles = files.parallelStream()
-        .map(File::new)
-        .map(FindFilesUtils::searchJavaFiles)
+        .map(file -> FindFilesUtils.search(file, getExtensions()))
         .flatMap(List::stream)
         .toList();
-    logger.info("Found {} files.", targetFiles.size());
+
+    logger.info("Found {} files with extensions: {}.", targetFiles.size(), Arrays.toString(getExtensions()));
 
     var execsAsync = new CompletableFuture[targetFiles.size()];
 
@@ -69,14 +88,14 @@ public class DocumentCodeCommand implements BuildCLICommand {
   private Supplier<String> createCodeDocumenter(File source) {
     try {
       logger.info("Reading source file: {}", source.getAbsolutePath());
-      var sourceCode = Files.readAllLines(source.toPath());
+      var sourceCode = Files.readString(source.toPath());
       logger.info("Source file read: {}", source.getAbsolutePath());
 
       var aiParams = createAIParamsFromConfigs();
       var iaService = new GeneralAIServiceFactory().create(aiParams);
 
       logger.info("Commenting with IA...");
-      return () -> iaService.generate(new AIChat("Document this code: \n\n%s".formatted(sourceCode)));
+      return () -> iaService.generate(new AIChat(sourceCode));
 
     } catch (IOException e) {
       return () -> {
@@ -87,24 +106,38 @@ public class DocumentCodeCommand implements BuildCLICommand {
   }
 
   private AIServiceParams createAIParamsFromConfigs() {
-    var aiVendor = allConfigs.getProperty(ConfigDefaultConstants.AI_VENDOR).orElse("jlama");
+    if (model == null) {
+      var aiVendor = allConfigs.getProperty(ConfigDefaultConstants.AI_VENDOR).orElse("jlama");
 
-    return switch (aiVendor.toLowerCase()) {
-      case "ollama" -> {
+      return switch (aiVendor.toLowerCase()) {
+        case "ollama" -> {
+          var url = allConfigs.getProperty(ConfigDefaultConstants.AI_URL).orElse(null);
+          var model = allConfigs.getProperty(ConfigDefaultConstants.AI_MODEL).orElse(null);
+
+          yield new OllamaAIServiceParams(url, model);
+        }
+        case "jlama" -> new JlamaAIServiceParams(allConfigs.getProperty(ConfigDefaultConstants.AI_MODEL).orElse(null));
+        default -> throw new IllegalStateException("Unexpected AI Vendor: " + aiVendor);
+      };
+    } else {
+      if (model.isJlama) {
+        return new JlamaAIServiceParams(allConfigs.getProperty(ConfigDefaultConstants.AI_MODEL).orElse(null));
+      } else if (model.isOllama) {
         var url = allConfigs.getProperty(ConfigDefaultConstants.AI_URL).orElse(null);
         var model = allConfigs.getProperty(ConfigDefaultConstants.AI_MODEL).orElse(null);
 
-        yield new OllamaAIServiceParams(url, model);
+        return new OllamaAIServiceParams(url, model);
+      } else {
+        throw new IllegalStateException("AI Vendor is required");
       }
-      case "jlama" -> new JlamaAIServiceParams(allConfigs.getProperty(ConfigDefaultConstants.AI_MODEL).orElse(null));
-      default -> throw new IllegalStateException("Unexpected AI Vendor: " + aiVendor);
-    };
+    }
   }
 
   private Consumer<String> saveSourceCodeDocumented(File file) {
     return sourceCode -> {
       try {
         Files.writeString(file.toPath(), sourceCode);
+        logger.info("Source Code updated: {}", file.getAbsolutePath());
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
@@ -119,4 +152,13 @@ public class DocumentCodeCommand implements BuildCLICommand {
       return null;
     };
   }
+
+  private String[] getExtensions() {
+    if (extensions == null || extensions.isEmpty()) {
+      return new String[]{"all"};
+    }
+
+    return Arrays.stream(extensions.split(",")).map(String::trim).map(".%s"::formatted).toArray(String[]::new);
+  }
+
 }

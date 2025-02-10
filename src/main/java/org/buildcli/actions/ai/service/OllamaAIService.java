@@ -5,7 +5,9 @@ import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import org.buildcli.actions.ai.AIChat;
 import org.buildcli.actions.ai.AIService;
-import org.buildcli.constants.AIConstants;
+
+import static org.buildcli.utils.ia.CodeUtils.endCode;
+import static org.buildcli.utils.ia.CodeUtils.startCode;
 
 public class OllamaAIService implements AIService {
   private final OllamaChatModel model;
@@ -20,9 +22,21 @@ public class OllamaAIService implements AIService {
 
   @Override
   public String generate(AIChat chat) {
-    var response = model.generate(new SystemMessage(AIConstants.COMMENT_CODE_PROMPT), new UserMessage(chat.getMessage()));
+    var aiMessageResponse = model.generate(
+        new SystemMessage(chat.getSystemMessage()),
+        new UserMessage(chat.getUserMessage())
+    );
 
-    return response.content().text();
+    var content = aiMessageResponse.content().text();
+
+    // Extract code content between ```java tags
+    int codeStart = startCode(content);
+    int codeEnd = endCode(content);
+    if (codeStart != -1 && codeEnd != -1) {
+      content = content.substring(codeStart + 7, codeEnd).trim();
+    }
+
+    return content;
   }
 
   public static Builder builder() {

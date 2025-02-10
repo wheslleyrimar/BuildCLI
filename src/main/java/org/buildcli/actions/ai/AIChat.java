@@ -1,20 +1,33 @@
 package org.buildcli.actions.ai;
 
+import org.buildcli.constants.AIConstants;
+
 import java.util.UUID;
 
 public class AIChat {
   private final UUID chatId = UUID.randomUUID();
-  private final String message;
+  private final String systemMessage;
+  private final String userMessage;
 
-  public AIChat(String message) {
-    this.message = message;
+  public AIChat(String systemMessage, String userMessage) {
+    this.systemMessage = systemMessage;
+    this.userMessage = userMessage;
   }
+
+  public AIChat(String userMessage) {
+    this(AIConstants.COMMENT_CODE_PROMPT, userMessage);
+  }
+
 
   public UUID getChatId() {
     return chatId;
   }
 
-  public String getMessage() {
-    return message;
+  public String getUserMessage() {
+    return userMessage;
+  }
+
+  public String getSystemMessage() {
+    return systemMessage;
   }
 }

@@ -33,13 +33,11 @@ public abstract class ConfigDefaultConstants {
 
 
   public static String composePropertyName(String... names) {
-    var builder = new StringBuilder("buildcli.");
+    var builder = new StringBuilder("buildcli");
 
     for (String name : names) {
       builder.append('.').append(name);
     }
-
-    builder.deleteCharAt(builder.length() - 1);
 
     return builder.toString();
   }

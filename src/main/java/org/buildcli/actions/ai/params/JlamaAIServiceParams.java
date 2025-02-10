@@ -20,4 +20,11 @@ public class JlamaAIServiceParams implements AIServiceParams {
   public String vendor() {
     return "jlama";
   }
+
+  @Override
+  public String toString() {
+    return "JlamaAIServiceParams{" +
+        "model='" + model + '\'' +
+        '}';
+  }
 }
