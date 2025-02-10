@@ -59,7 +59,7 @@ Welcome to BuildCLI - Java Project Management!
 3. **Set up BuildCLI for Global Access**:
 - Copy the `buildcli` file to a directory in your system PATH, such as `~/bin`:
    ```bash
-   cp target/BuildCLI-1.0-SNAPSHOT.jar ~/bin/
+   cp target/buildcli.jar ~/bin/
   ```
 - Create a wrapper script:
   ```bash 
@@ -68,7 +68,7 @@ Welcome to BuildCLI - Java Project Management!
 - Insert the following content into the file:
    ```bash
   #!/bin/bash
-   java -jar "$HOME/bin/BuildCLI-1.0-SNAPSHOT.jar" "$@"
+   java -jar "$HOME/bin/buildcli.jar.jar" "$@"
    ```
 - Save and exit Nano:
   - Press CTRL + O, then Enter to save.
