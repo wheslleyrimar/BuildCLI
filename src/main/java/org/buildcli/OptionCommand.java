@@ -4,6 +4,7 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
+@Deprecated(forRemoval = true)
 public class OptionCommand {
 
     @Spec

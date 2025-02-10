@@ -2,6 +2,7 @@ package org.buildcli;
 
 import java.util.HashMap;
 
+@Deprecated(forRemoval = true)
 public class OptionCommandMap extends HashMap<String, CommandExecutor> {
 
   private static final long serialVersionUID = 1L;
