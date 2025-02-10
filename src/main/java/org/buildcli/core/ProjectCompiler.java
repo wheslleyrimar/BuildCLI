@@ -11,9 +11,18 @@ public class ProjectCompiler {
     private static final Logger logger = Logger.getLogger(ProjectCompiler.class.getName());
 
     public void compileProject() {
+        compileProject(false);
+    }
+
+    public void compileProject(boolean recomp) {
         try {
             // Altere o comando para "package" em vez de "compile"
-            ProcessBuilder builder = new ProcessBuilder(SystemCommands.MVN.getCommand(), "package");
+            ProcessBuilder builder;
+            if (recomp) {
+                builder = new ProcessBuilder(SystemCommands.MVN.getCommand(), "clean", "package");
+            } else {
+                builder = new ProcessBuilder(SystemCommands.MVN.getCommand(), "package");
+            }
             builder.inheritIO();
             Process process = builder.start();
             int exitCode = process.waitFor();

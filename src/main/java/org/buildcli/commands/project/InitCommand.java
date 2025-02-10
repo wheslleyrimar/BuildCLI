@@ -14,6 +14,8 @@ import java.io.IOException;
 public class InitCommand implements BuildCLICommand {
   @Option(names = {"--name", "-n"}, defaultValue = "buildcli")
   private String projectName;
+  @Option(names = {"--jdk", "-j"}, defaultValue = "17")
+  private String jdkVersion;
 
   @Override
   public void run() {
@@ -89,8 +91,8 @@ public class InitCommand implements BuildCLICommand {
                     <version>1.0-SNAPSHOT</version>
             
                     <properties>
-                        <maven.compiler.source>17</maven.compiler.source>
-                        <maven.compiler.target>17</maven.compiler.target>
+                        <maven.compiler.source>%s</maven.compiler.source>
+                        <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
                         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
                     </properties>
             
@@ -129,7 +131,7 @@ public class InitCommand implements BuildCLICommand {
                         </plugins>
                     </build>
                 </project>
-            """.formatted(projectName.toLowerCase(), projectName, projectName.toLowerCase()));
+            """.formatted(projectName.toLowerCase(), projectName, jdkVersion, projectName.toLowerCase()));
       }
       SystemOutLogger.log("pom.xml file created with default configuration.");
     }
