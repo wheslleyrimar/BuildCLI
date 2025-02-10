@@ -7,7 +7,8 @@ import picocli.CommandLine.Option;
 
 import java.util.logging.Logger;
 
-@Command(name = "dockerfile", aliases = {"docker", "d"})
+@Command(name = "dockerfile", aliases = {"docker", "d"}, description = "Builds and runs a Docker image for the project."
+        + " Alias: 'docker' and 'd'. Builds the Docker image and starts the container, exposing port 8080.")
 public class DockerfileCommand implements BuildCLICommand {
   private final Logger logger = Logger.getLogger(DockerfileCommand.class.getName());
 
