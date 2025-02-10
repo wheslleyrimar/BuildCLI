@@ -11,6 +11,7 @@ import org.buildcli.log.SystemOutLogger;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+
 @Command(
     name = "init",
     aliases = {"i"},
