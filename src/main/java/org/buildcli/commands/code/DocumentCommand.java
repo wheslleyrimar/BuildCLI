@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
-@Command(name = "document", aliases = {"docs"}, description = "Command to comment sources", mixinStandardHelpOptions = true)
+@Command(name = "document", aliases = {"docs"}, description = "Generates documentation for the project code. Alias: 'docs'. This command scans the specified files and extracts structured documentation.", mixinStandardHelpOptions = true)
 public class DocumentCommand implements BuildCLICommand {
   @ArgGroup
   private IAModel model;
