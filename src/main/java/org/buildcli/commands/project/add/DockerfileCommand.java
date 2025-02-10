@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Command(name = "dockerfile", aliases = {"docker", "df"}, mixinStandardHelpOptions = true)
+@Command(name = "dockerfile", aliases = {"docker", "df"}, description = "Generates a Dockerfile for the project. "
+        + "Alias: 'docker' and 'df'. Allows customizing the base image, exposed ports, and file name.",
+        mixinStandardHelpOptions = true)
 public class DockerfileCommand implements BuildCLICommand {
   private Logger logger = Logger.getLogger(DockerfileCommand.class.getName());
 
