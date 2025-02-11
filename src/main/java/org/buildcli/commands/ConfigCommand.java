@@ -1,9 +1,6 @@
 package org.buildcli.commands;
 
-import org.buildcli.commands.config.PrintCommand;
-import org.buildcli.commands.config.SetCommand;
-import org.buildcli.commands.config.InitCommand;
-import org.buildcli.commands.config.RmCommand;
+import org.buildcli.commands.config.*;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -23,7 +20,7 @@ import picocli.CommandLine.Option;
  *   buildcli config rm <key>            - Remove a configuration key.
  */
 @Command(name = "config", aliases = {"c"}, description = "Manage configuration settings.", mixinStandardHelpOptions = true,
-    subcommands = {SetCommand.class, InitCommand.class, PrintCommand.class, RmCommand.class})
+    subcommands = {SetCommand.class, ClearCommand.class, InitCommand.class, PrintCommand.class, RmCommand.class})
 public class ConfigCommand {
 
   /**

@@ -26,12 +26,12 @@ public class BuildCLIIntro {
 	public BuildCLIIntro() { }
 
     public static void welcome(){
-    	SystemOutLogger.log(",-----.          ,--.,--.   ,--. ,-----.,--.   ,--.");
-    	SystemOutLogger.log("|  |) /_ ,--.,--.`--'|  | ,-|  |'  .--./|  |   |  |");
-    	SystemOutLogger.log("|  .-.  \\|  ||  |,--.|  |' .-. ||  |    |  |   |  |       Built by the community, for the community");
-    	SystemOutLogger.log("|  '--' /'  ''  '|  ||  |\\ `-' |'  '--'\\|  '--.|  |");
-    	SystemOutLogger.log("`------'  `----' `--'`--' `---'  `-----'`-----'`--'");
-    	SystemOutLogger.log("");
+			System.out.println(",-----.          ,--.,--.   ,--. ,-----.,--.   ,--.");
+    	System.out.println("|  |) /_ ,--.,--.`--'|  | ,-|  |'  .--./|  |   |  |");
+    	System.out.println("|  .-.  \\|  ||  |,--.|  |' .-. ||  |    |  |   |  |       Built by the community, for the community");
+    	System.out.println("|  '--' /'  ''  '|  ||  |\\ `-' |'  '--'\\|  '--.|  |");
+    	System.out.println("`------'  `----' `--'`--' `---'  `-----'`-----'`--'");
+    	System.out.println();
     }
 
 	public static void about() {

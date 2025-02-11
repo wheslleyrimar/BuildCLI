@@ -22,6 +22,19 @@ public class BuildCLIConfig {
   private BuildCLIConfig(File file) {
     try (var inputStream = new FileInputStream(file)) {
       this.properties.load(inputStream);
+
+      for (var key : properties.stringPropertyNames()) {
+        var value = properties.getProperty(key);
+
+        //Add support to env vars system
+        if (value != null && value.matches("^\\$\\{[A-Z]+}$")) {
+          value = value.substring(value.indexOf("${") + 2, value.indexOf("}"));
+          System.out.println(key + " = " + value);
+          value = System.getenv(value);
+        }
+
+        properties.setProperty(key, value);
+      }
     } catch (IOException e) {
       throw new ConfigException("Error loading config from file: " + file.getAbsolutePath(), e);
     }
@@ -51,8 +64,8 @@ public class BuildCLIConfig {
     return Optional.of(Boolean.parseBoolean(properties.getProperty(property)));
   }
 
-  public Optional<String> getProperty(String property, String defaultValue) {
-    return Optional.ofNullable(properties.getProperty(property, defaultValue));
+  public Optional<String> getProperty(String property) {
+    return Optional.ofNullable(properties.getProperty(property));
   }
 
   public void addOrSetProperty(String property, String value) {
