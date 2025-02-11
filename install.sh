@@ -12,11 +12,11 @@ function check_command() {
 check_command java
 check_command mvn
 
-if ! git clone https://github.com/wheslleyrimar/buildcli.git ; then 
+if ! git clone https://github.com/BuildCLI/BuildCLI.git ; then 
 	echo "Failed to clone repository. Make sure Git is installed."
 	exit 1
 fi
-cd buildcli
+cd BuildCLI
 
 if ! mvn clean package; then
     echo "Error while creating Maven package."
