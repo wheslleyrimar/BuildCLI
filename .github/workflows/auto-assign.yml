@@ -1,4 +1,5 @@
 name: Auto Assign on Issue Comment
+
 on:
   issue_comment:
     types: [created]
@@ -8,11 +9,12 @@ on:
 jobs:
   auto-assign:
     runs-on: ubuntu-latest
+    environment: <secrets>  # Defina o nome correto do ambiente configurado no GitHub
     steps:
       - name: Check comment and assign user
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTO_ISSUE_TOKEN }}
           script: |
             const issue = context.payload.issue;
             const comment = context.payload.comment.body.toLowerCase();
@@ -22,12 +24,8 @@ jobs:
             const repoOwner = context.repo.owner;
             const repoName = context.repo.repo;
             const keywords = [
-              "assign me",
-              "can you assign this issue to me",
-              "i would like to work on this",
-              "i want to do this issue"
+              "i would like to do this issue"
             ];
-#17
             if (keywords.some(keyword => comment.includes(keyword))) {
               if (assignedUsers.length > 0) {
                 const assignedUser = assignedUsers[0];
@@ -76,7 +74,7 @@ jobs:
       - name: Reassign if "no" is replied
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTO_ISSUE_TOKEN }}
           script: |
             const issue = context.payload.issue;
             const comment = context.payload.comment.body.toLowerCase();
@@ -122,7 +120,7 @@ jobs:
       - name: Reassign if no response after 7 days
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTO_ISSUE_TOKEN }}
           script: |
             const { repo, owner } = context.repo;
             const issueNumber = context.payload.issue.number;
@@ -166,18 +164,15 @@ jobs:
         if: github.event.action == 'opened'
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.AUTO_ISSUE_TOKEN }}
           script: |
             const issue = context.payload.issue;
             const repoOwner = context.repo.owner;
             const repoName = context.repo.repo;
             const issueNumber = issue.number;
             
-            const instructions = `To assign yourself to this issue, comment with one of the following:
-            - "assign me"
-            - "can you assign this issue to me"
-            - "i would like to work on this"
-            - "i want to do this issue"
+            const instructions = `To assign yourself to this issue, comment with the following:
+            - "I would like to do this issue"
             If the issue is already assigned, the assigned user will be asked if they are still working on it.`;
             
             await github.rest.issues.createComment({
