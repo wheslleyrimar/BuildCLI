@@ -2,14 +2,14 @@
 setlocal
 
 echo Cloning the BuildCLI repository...
-git clone https://github.com/wheslleyrimar/buildcli.git || (
+git clone https://github.com/BuildCLI/BuildCLI.git || (
     echo Failed to clone repository. Make sure Git is installed.
     pause
     exit /b 1
 )
 
-cd buildcli || (
-    echo Directory 'buildcli' not found. Cloning may have failed.
+cd BuildCLI || (
+    echo Directory 'BuildCLI' not found. Cloning may have failed.
     pause
     exit /b 1
 )
@@ -56,7 +56,7 @@ echo Creating buildcli.bat shortcut...
 echo Ensuring %USERPROFILE%\bin is in the PATH...
 echo If the command fails, add this manually to your environment variables:
 echo.
-echo setx PATH "%%USERPROFILE%%\bin;%%PATH%%"
+echo setx PATH "%PATH%;%USERPROFILE%\bin"
 echo.
 
 echo Installation completed!
