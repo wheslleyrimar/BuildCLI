@@ -45,38 +45,17 @@ Welcome to BuildCLI - Java Project Management!
 
 ## Installation
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/wheslleyrimar/buildcli.git
-   cd buildcli
-   ```
+1. **Script Installation**:
+Just download the .sh or .bat file and execute.
 
-2. **Build and Package the Project**:
-   ```bash
-   mvn package
-   ```
-
-3. **Set up BuildCLI for Global Access**:
-- Copy the `buildcli` file to a directory in your system PATH, such as `~/bin`:
-   ```bash
-   cp target/buildcli.jar ~/bin/
-  ```
-- Create a wrapper script:
-  ```bash 
-   nano ~/bin/buildcli
-   ```
-- Insert the following content into the file:
-   ```bash
-  #!/bin/bash
-   java -jar "$HOME/bin/buildcli.jar.jar" "$@"
-   ```
-- Save and exit Nano:
-  - Press CTRL + O, then Enter to save.
-  - Press CTRL + X to exit.
-  
-- Make the script executable:
+     - On a Unix-like system (Linux, macOS), simply give execution permission to `install.sh` and run it:  
      ```bash
-     chmod +x ~/bin/buildcli
+     sudo chmod +x install.sh  
+     ./install.sh  
+     ```
+     - On Windows: Run `install.bat` by double-clicking it or executing the following command in the Command Prompt (cmd):  
+     ```cmd
+     install.bat
      ```
 
 Now `BuildCLI` is ready to use. Test the `buildcli` command in the terminal.
