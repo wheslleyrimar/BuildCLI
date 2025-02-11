@@ -15,7 +15,7 @@ import picocli.CommandLine.Option;
 @Command(
     name = "init",
     aliases = {"i"},
-    description = "Initializes a new project. Alias: 'i'. This command sets up a new project structure.",
+    description = "Initializes a new project. This command sets up a new project structure.",
     mixinStandardHelpOptions = true
 )
 public class InitCommand implements BuildCLICommand {
