@@ -9,8 +9,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.buildcli.commands.project.BuildCommand;
 import org.buildcli.constants.MavenConstants;
-import org.buildcli.core.ProjectCompiler;
 import org.buildcli.domain.BuildCLICommand;
 import org.buildcli.log.SystemOutLogger;
 
@@ -51,8 +51,7 @@ public class JDKCommand implements BuildCLICommand {
 
         if (recomp) {
             SystemOutLogger.log("Rebuilding project with new java version");
-            ProjectCompiler compiler = new ProjectCompiler();
-            compiler.compileProject(recomp);
+            new BuildCommand().run();
         }
     }
 }

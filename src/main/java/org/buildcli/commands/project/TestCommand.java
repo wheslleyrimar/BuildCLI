@@ -4,7 +4,7 @@ import org.buildcli.core.ProjectTester;
 import org.buildcli.domain.BuildCLICommand;
 import picocli.CommandLine.Command;
 
-@Command(name = "test", aliases = {"t"}, description = "Executes the project tests, alias: 't'.", mixinStandardHelpOptions = true)
+@Command(name = "test", aliases = {"t"}, description = "Executes the project tests.", mixinStandardHelpOptions = true)
 public class TestCommand implements BuildCLICommand {
   @Override
   public void run() {
