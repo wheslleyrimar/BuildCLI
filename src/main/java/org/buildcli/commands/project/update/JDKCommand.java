@@ -17,12 +17,12 @@ import org.buildcli.log.SystemOutLogger;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
-@Command(name = "jdk", description = "", mixinStandardHelpOptions = true)
+@Command(name = "jdk", description = "Updates JDK version of the project.", mixinStandardHelpOptions = true)
 public class JDKCommand implements BuildCLICommand {
     private static final Logger logger = Logger.getLogger(JDKCommand.class.getName());
-    @Option(names = {"--recomp", "-r"}, description = "", defaultValue = "false")
+    @Option(names = {"--recomp", "-r"}, description = "Rebuilds the project with the new JDK version.", defaultValue = "false")
     private boolean recomp;
-    @Option(names = {"--jdkver", "-jv"}, description = "", defaultValue = "17")
+    @Option(names = {"--jdkver", "-jv"}, description = "The JDK version to update to.", defaultValue = "17")
     private String version;
 
     @Override
