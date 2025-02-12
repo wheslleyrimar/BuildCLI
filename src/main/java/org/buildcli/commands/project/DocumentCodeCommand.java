@@ -14,7 +14,7 @@ import picocli.CommandLine.Parameters;
 @Command(
     name = "document-code",
     aliases = {"docs"},
-    description = "Generates documentation for the project code. Alias: 'docs'. This command scans the specified files and extracts structured documentation.",
+    description = "Generates documentation for the project code. This command scans the specified files and extracts structured documentation.",
     mixinStandardHelpOptions = true
 )
 public class DocumentCodeCommand implements BuildCLICommand {

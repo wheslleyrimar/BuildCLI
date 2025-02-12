@@ -39,4 +39,4 @@ dependency-reduced-pom.xml
 
 app.jar
 buildcli.jar
-Dockerfile
+Dockefile

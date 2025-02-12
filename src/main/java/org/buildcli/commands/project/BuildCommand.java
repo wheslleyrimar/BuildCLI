@@ -10,7 +10,7 @@ import picocli.CommandLine.Option;
 
 import java.util.logging.Logger;
 
-@Command(name = "build", aliases = {"b"}, description = "Builds the project, either compiling or packaging, and logs the result, alias: 'b'.", mixinStandardHelpOptions = true)
+@Command(name = "build", aliases = {"b"}, description = "Builds the project, either compiling or packaging, and logs the result.", mixinStandardHelpOptions = true)
 public class BuildCommand implements BuildCLICommand {
   private final Logger logger = Logger.getLogger(BuildCommand.class.getName());
 
