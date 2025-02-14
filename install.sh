@@ -44,7 +44,6 @@ EOF
 
 chmod +x "$HOME/bin/buildcli"
 
-# Adds $HOME/bin to PATH if necessary.
 if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
     echo "The directory \$HOME/bin is not in the PATH."
     echo "Please add the following line to your ~/.bashrc, ~/.zshrc, or the appropriate shell configuration file:"
