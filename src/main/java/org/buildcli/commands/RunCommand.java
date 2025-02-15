@@ -23,37 +23,27 @@ public class RunCommand implements BuildCLICommand {
   private final Logger logger = Logger.getLogger(RunCommand.class.getName());
   private final ProfileManager profileManager = new ProfileManager();
 
-  @Parameters(index = "0",description = "The file to run", arity = "1", paramLabel = "FILE", defaultValue = ".")
+  @Parameters(index = "0", description = "The file or directory to run. If a directory, it will package and run the project.", arity = "0..1", paramLabel = "<file-or-dir>", defaultValue = ".")
   private File file;
+
+  @Parameters(index = "1..*", arity = "0..*", paramLabel = "<args>", description = "Arguments to pass to the program.")
+  private String[] args;
 
   @Override
   public void run() {
+    if (file == null || (!file.exists() && file.isDirectory())) {
+      throw new IllegalArgumentException("The specified path does not exist or is not a directory.");
+    }
+
     try {
       CommandLineProcess process;
-      if (file == null || file.isDirectory()) {
-        // Carregar o perfil ativo
-        String activeProfile = profileManager.getActiveProfile();
-        if (activeProfile == null) {
-          logger.warning("No active profile set. Using default profile.");
-          activeProfile = "default";
-        }
-
-        // Carregar as propriedades do perfil ativo
-        Properties properties = loadProfileProperties(activeProfile);
-        String profileMessage = properties.getProperty("app.message", "Running with no specific profile");
-
-        // Exibir a mensagem do perfil ativo no console
-        System.out.println("Active Profile: " + activeProfile);
-        System.out.println(profileMessage);
-
-        MavenProcess.createPackageProcessor().run();
-        var jarPath = findJar();
-        process = JavaProcess.createRunJarProcess(jarPath);
+      if (file.isDirectory()) {
+        process = createRunProjectProcess();
       } else if (file.isFile()) {
         if (file.getName().endsWith(".jar")) {
-          process = JavaProcess.createRunJarProcess(file.getAbsolutePath());
+          process = JavaProcess.createRunJarProcess(file.getAbsolutePath(), args);
         } else if (file.getName().endsWith(".java")) {
-          process = JavaProcess.createRunClassProcess(file.getAbsolutePath());
+          process = JavaProcess.createRunClassProcess(file.getAbsolutePath(), args);
         } else {
           throw new IllegalArgumentException("File must be a .jar or .java file.");
         }
@@ -69,6 +59,28 @@ public class RunCommand implements BuildCLICommand {
       logger.log(Level.SEVERE, "Failed to run project", e);
       Thread.currentThread().interrupt();
     }
+  }
+
+  private CommandLineProcess createRunProjectProcess() throws IOException, InterruptedException {
+    // Carregar o perfil ativo
+    String activeProfile = profileManager.getActiveProfile();
+    if (activeProfile == null) {
+      logger.warning("No active profile set. Using default profile.");
+      activeProfile = "default";
+    }
+
+    // Carregar as propriedades do perfil ativo
+    Properties properties = loadProfileProperties(activeProfile);
+    String profileMessage = properties.getProperty("app.message", "Running with no specific profile");
+
+    // Exibir a mensagem do perfil ativo no console
+    System.out.println("Active Profile: " + activeProfile);
+    System.out.println(profileMessage);
+
+    MavenProcess.createPackageProcessor().run();
+    var jarPath = findJar();
+
+    return JavaProcess.createRunJarProcess(jarPath);
   }
 
   private Properties loadProfileProperties(String profile) {
