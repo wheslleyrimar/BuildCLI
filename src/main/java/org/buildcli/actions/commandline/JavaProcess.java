@@ -18,6 +18,14 @@ public class JavaProcess implements CommandLineProcess{
     return process;
   }
 
+  public static JavaProcess createRunClassProcess(String className) {
+    var process = new JavaProcess();
+
+    process.commands.add(className);
+
+    return process;
+  }
+
   @Override
   public int run() {
     try {
