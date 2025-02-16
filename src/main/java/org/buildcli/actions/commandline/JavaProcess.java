@@ -4,26 +4,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaProcess implements CommandLineProcess{
-  private final List<String> commands = new ArrayList<>();
+public class JavaProcess extends AbstractCommandLineProcess {
   private JavaProcess() {
-    commands.add("java");
+    super("java");
   }
 
   public static JavaProcess createRunJarProcess(String jarName) {
-    var process = new JavaProcess();
-
-    process.commands.addAll(List.of("-jar", jarName));
-
-    return process;
+    return createProcess("-jar", jarName);
   }
 
-  @Override
-  public int run() {
-    try {
-      return new ProcessBuilder(commands).inheritIO().start().waitFor();
-    } catch (InterruptedException | IOException e) {
-      throw new RuntimeException(e);
-    }
+  public static JavaProcess createGetVersionProcess() {
+    return createProcess("--version");
+  }
+
+  public static JavaProcess createProcess(String... args) {
+    var process = new JavaProcess();
+
+    process.commands.addAll(List.of(args));
+
+    return process;
   }
 }
