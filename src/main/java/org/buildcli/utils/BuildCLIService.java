@@ -48,13 +48,16 @@ public class BuildCLIService {
 		gitExec.showContributors(localRepository, "https://github.com/BuildCLI/BuildCLI.git");
 	}
 
-	private static void updateBuildCLI(){
-		updateRepository();
-		generateBuildCLIJar();
-		String homeBuildCLI = OS.getHomeBinDirectory();
-		OS.cpDirectoryOrFile(buildCLIDirectory+"/target/buildcli.jar", homeBuildCLI);
-		OS.chmodX(homeBuildCLI+"/buildcli.jar");
-		SystemOutLogger.log("\u001B[32mBuildCLI updated successfully!\u001B[0m");
+	private static void updateBuildCLI() {
+		if (updateRepository()) {
+			generateBuildCLIJar();
+			String homeBuildCLI = OS.getHomeBinDirectory();
+			OS.cpDirectoryOrFile(buildCLIDirectory + "/target/buildcli.jar", homeBuildCLI);
+			OS.chmodX(homeBuildCLI + "/buildcli.jar");
+			SystemOutLogger.log("\u001B[32mBuildCLI updated successfully!\u001B[0m");
+		}else {
+			SystemOutLogger.log("\u001B[33mBuildCLI update canceled!\u001B[0m");
+		}
 	}
 
 	public static void checkUpdatesBuildCLIAndUpdate() {
@@ -68,10 +71,12 @@ public class BuildCLIService {
 		}
 	}
 
-	private static void updateRepository(){
+	private static boolean updateRepository(){
 		if(CLIInteractions.getConfirmation("update BuildCLI")){
 			gitExec.updateLocalRepositoryFromUpstream(localRepository,"https://github.com/BuildCLI/BuildCLI.git");
+			return true;
 		}
+		return false;
 	}
 
 	private static void generateBuildCLIJar(){

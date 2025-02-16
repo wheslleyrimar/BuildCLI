@@ -16,6 +16,7 @@ public class CLIInteractions {
             answer = scanner.nextLine().trim().toUpperCase();
         }
 
+        scanner.close();
         return answer.equalsIgnoreCase("y");
     }
 }
