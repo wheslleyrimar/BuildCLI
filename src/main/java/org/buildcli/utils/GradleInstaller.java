@@ -100,7 +100,7 @@ public abstract class GradleInstaller {
 
   public static void configurePath(String gradleExtractedDir) throws IOException {
     if (OS.isWindows()) {
-      Runtime.getRuntime().exec("setx PATH \"%PATH%;" + gradleExtractedDir + "\\bin\"");
+      Runtime.getRuntime().exec(new String[] {"setx PATH \"%PATH%;" + gradleExtractedDir + "\\bin\""});
     } else {
       String shellConfigFile;
       String shell = System.getenv("SHELL");
@@ -125,13 +125,15 @@ public abstract class GradleInstaller {
       if (response.equals("y") || response.equals("yes")) {
         SystemOutLogger.log("Running the commands...");
 
-        Runtime.getRuntime().exec("sudo chmod +x " + gradleExtractedDir + "/bin/gradle");
+        Runtime.getRuntime().exec(new String[] {"sudo chmod +x " + gradleExtractedDir + "/bin/gradle"});
 
         String sourceCommand = "bash -c 'source ~/" + shellConfigFile + " && echo \"Source command executed\"'";
-        Runtime.getRuntime().exec(sourceCommand);
+        Runtime.getRuntime().exec(new String[] {sourceCommand});
       } else {
         SystemOutLogger.log("You can run the commands later.");
       }
+
+      scanner.close();
     }
   }
 }

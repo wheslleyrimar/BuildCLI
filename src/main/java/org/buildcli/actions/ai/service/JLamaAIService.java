@@ -8,7 +8,6 @@ import org.buildcli.actions.ai.AIChat;
 import org.buildcli.actions.ai.AIService;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 import static org.buildcli.utils.ia.CodeUtils.endCode;
 import static org.buildcli.utils.ia.CodeUtils.startCode;
