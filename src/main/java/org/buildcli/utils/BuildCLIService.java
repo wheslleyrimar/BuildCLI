@@ -51,17 +51,15 @@ public class BuildCLIService {
 	private static void updateBuildCLI(){
 		updateRepository();
 		generateBuildCLIJar();
-		OS.cpDirectory(buildCLIDirectory+"/target/buildcli.jar", OS.getHomeBinDirectory());
-		SystemOutLogger.log("""
-				\u001B[32m
-				BuildCLI updated successfully!
-				\u001B[0m
-				""");
+		String homeBuildCLI = OS.getHomeBinDirectory();
+		OS.cpDirectoryOrFile(buildCLIDirectory+"/target/buildcli.jar", homeBuildCLI);
+		OS.chmodX(homeBuildCLI+"/buildcli.jar");
+		SystemOutLogger.log("\u001B[32mBuildCLI updated successfully!\u001B[0m");
 	}
 
 	public static void checkUpdatesBuildCLIAndUpdate() {
 		boolean updated = gitExec.checkIfLocalRepositoryIsUpdated(localRepository, "https://github.com/BuildCLI/BuildCLI.git");
-		if (!updated){
+		if (updated){
 			SystemOutLogger.log("""
                     \u001B[33m
                     ATTENTION: Your BuildCLI is outdated!
@@ -79,7 +77,6 @@ public class BuildCLIService {
 	private static void generateBuildCLIJar(){
 		OS.cdDirectory("");
 		OS.cdDirectory(buildCLIDirectory);
-		System.out.println(System.getenv("HOME"));
 		build.run();
 	}
 

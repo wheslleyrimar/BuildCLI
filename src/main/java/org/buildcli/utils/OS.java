@@ -27,7 +27,6 @@ public abstract class OS {
             command = new String[]{"cmd", "/c", "cd", path};
         } else {
             command = new String[]{"sh", "-c", "cd", path};
-            System.out.println("cd " + path);
         }
         Runtime.getRuntime().exec(command);
     } catch (Exception e) {
@@ -35,7 +34,7 @@ public abstract class OS {
     }
   }
 
-  public static void cpDirectory(String source, String destination){
+  public static void cpDirectoryOrFile(String source, String destination){
     try {
       String[] command;
       if (isWindows()) {
@@ -57,6 +56,19 @@ public abstract class OS {
             homeBin= System.getenv("HOME")+"/bin";
       }
       return homeBin;
+  }
+
+  public static void chmodX(String path){
+      if(!isWindows()){
+            try {
+                String chmodCommand = "chmod +x " + path;
+                String[] command = new String[]{"sh", "-c", chmodCommand};
+                Runtime.getRuntime().exec(command);
+            } catch (Exception e) {
+                logger.severe("Error changing directory: " + e.getMessage());
+            }
+      }
+
   }
 
 }

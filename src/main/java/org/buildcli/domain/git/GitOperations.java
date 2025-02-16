@@ -144,9 +144,9 @@ public class GitOperations {
 
     public void pullUpstream() {
         try {
-            git.pull().setRemote("upstream").call();
+            git.pull().setRemote("upstream").setRemoteBranchName("main").call();
         } catch (GitAPIException e) {
-            handleException("Error executing git pull upstream command", e);
+            handleException("Error executing git pull upstream main command", e);
         }
     }
 
