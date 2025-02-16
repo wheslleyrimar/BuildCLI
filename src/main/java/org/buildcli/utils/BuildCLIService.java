@@ -26,7 +26,7 @@ public class BuildCLIService {
 	private static final GitCommandExecutor gitExec = new GitCommandExecutor();
 	private static final BuildCommand build =new BuildCommand();
 
-	private static final String buildCLIDirectory = getBuildCLIBuildDirectory();
+	private static final String buildCLIDirectory =getBuildCLIBuildDirectory();
 	private static final String localRepository = gitExec.findGitRepository(buildCLIDirectory);
 
 	public BuildCLIService() { }
@@ -62,7 +62,7 @@ public class BuildCLIService {
 
 	public static void checkUpdatesBuildCLIAndUpdate() {
 		boolean updated = gitExec.checkIfLocalRepositoryIsUpdated(localRepository, "https://github.com/BuildCLI/BuildCLI.git");
-		if (updated){
+		if (!updated){
 			SystemOutLogger.log("""
                     \u001B[33m
                     ATTENTION: Your BuildCLI is outdated!

@@ -15,8 +15,6 @@ public class CLIInteractions {
             System.out.println("Invalid answer. " +action);
             answer = scanner.nextLine().trim().toUpperCase();
         }
-
-        scanner.close();
         return answer.equalsIgnoreCase("y");
     }
 }
