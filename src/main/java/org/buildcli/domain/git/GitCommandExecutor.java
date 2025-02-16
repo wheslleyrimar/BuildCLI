@@ -3,14 +3,14 @@ package org.buildcli.domain.git;
 import org.buildcli.log.SystemOutLogger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
+//import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+//import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.sshd.SshdSessionFactory;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.StreamSupport;
 
 import static org.buildcli.domain.git.GitCommands.*;
 import static org.buildcli.domain.git.GitCommandFormatter.*;
@@ -32,7 +31,9 @@ public class GitCommandExecutor {
         SshdSessionFactory.setInstance(factory);
     }
     private static final Logger logger = Logger.getLogger(GitCommandExecutor.class.getName());
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GitCommandExecutor.class);
+    
+    // Commenting the below as it is not being used. Uncomment when necessary
+    //private static final org.slf4j.Logger log = LoggerFactory.getLogger(GitCommandExecutor.class);
 
     private Git git;
     private Repository repository;
@@ -148,17 +149,18 @@ public class GitCommandExecutor {
         }
     }
 
-    private Iterable<RevCommit> gitgitLogOnlyCommitsNotInLocal(ObjectId localHead, ObjectId remoteHead){
-        try {
-            return git.log()
-                    .not(localHead)
-                    .add(remoteHead)
-                    .call();
-        } catch (GitAPIException | MissingObjectException | IncorrectObjectTypeException e) {
-            logger.log(Level.SEVERE, "Error executing git log command", e);
-            throw new RuntimeException(e);
-        }
-    }
+    //// Commenting since it is not being used. Uncomment when necessary
+    //private Iterable<RevCommit> gitgitLogOnlyCommitsNotInLocal(ObjectId localHead, ObjectId remoteHead){
+    //    try {
+    //        return git.log()
+    //                .not(localHead)
+    //                .add(remoteHead)
+    //                .call();
+    //    } catch (GitAPIException | MissingObjectException | IncorrectObjectTypeException e) {
+    //        logger.log(Level.SEVERE, "Error executing git log command", e);
+    //        throw new RuntimeException(e);
+    //    }
+    //}
 
 
 
