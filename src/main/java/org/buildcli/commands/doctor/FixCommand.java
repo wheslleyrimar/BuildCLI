@@ -17,6 +17,14 @@ public class FixCommand implements BuildCLICommand {
   @Override
   public void run() {
     logger.warn("Fix command requires admin privileges.");
+    logger.info("Scanning environment...");
+    var notInstalledTools = ToolCheckers.all().stream().filter(FixCommand::isNotInstalled);
+
+    if (notInstalledTools.findAny().isEmpty()) {
+      logger.info("No issues found.");
+      return;
+    }
+
     logger.info("Attempting to fix issues...");
     ToolCheckers.all().stream().filter(FixCommand::isNotInstalled).forEach(checker -> {
       logger.info("Fixing {}...", checker.name());
