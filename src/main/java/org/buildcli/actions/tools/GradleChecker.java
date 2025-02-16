@@ -18,11 +18,11 @@ public class GradleChecker implements ToolChecker {
   public String version() {
     var process = GradleProcess.createGetVersionProcess();
     var result = process.run();
-    var lines = process.output();
+    var lines = process.output().stream().filter(line -> line.contains("Gradle")).toList();
 
     if (result == 0 && !lines.isEmpty()) {
       var versionLine = lines.getFirst();
-      return versionLine.split(" ")[1];
+      return versionLine.split(" ")[1].replace("!", "");
     }
 
     return "N/A";

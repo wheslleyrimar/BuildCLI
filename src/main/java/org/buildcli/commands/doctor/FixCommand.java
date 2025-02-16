@@ -3,6 +3,8 @@ package org.buildcli.commands.doctor;
 import org.buildcli.actions.tools.ToolChecker;
 import org.buildcli.actions.tools.ToolCheckers;
 import org.buildcli.domain.BuildCLICommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -11,11 +13,13 @@ import picocli.CommandLine.Command;
     mixinStandardHelpOptions = true
 )
 public class FixCommand implements BuildCLICommand {
+  private final Logger logger = LoggerFactory.getLogger("DoctorFixCommand");
   @Override
   public void run() {
-    System.out.println("Attempting to fix issues...");
+    logger.warn("Fix command requires admin privileges.");
+    logger.info("Attempting to fix issues...");
     ToolCheckers.all().stream().filter(FixCommand::isNotInstalled).forEach(checker -> {
-      System.out.println("Fixing " + checker.name() + "...");
+      logger.info("Fixing {}...", checker.name());
       checker.fixIssue();
     });
   }

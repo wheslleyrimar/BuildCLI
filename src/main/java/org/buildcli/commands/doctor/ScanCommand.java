@@ -3,6 +3,8 @@ package org.buildcli.commands.doctor;
 import org.buildcli.actions.tools.DockerChecker;
 import org.buildcli.actions.tools.ToolCheckers;
 import org.buildcli.domain.BuildCLICommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine.Command;
 
 @Command(
@@ -11,19 +13,20 @@ import picocli.CommandLine.Command;
     mixinStandardHelpOptions = true
 )
 public class ScanCommand implements BuildCLICommand {
+  private final Logger logger = LoggerFactory.getLogger("DoctorScanCommand");
   @Override
   public void run() {
     ToolCheckers.all().forEach(toolChecker -> {
-      System.out.println("Running environment scan...");
-      System.out.println("Checking " + toolChecker.name() + "...");
+      logger.info("Running environment scan...");
+      logger.info("Checking {}...", toolChecker.name());
 
       if (toolChecker.isInstalled()) {
-        System.out.println("  Installed, version: " + toolChecker.version());
+        logger.info("  Installed, version: {}", toolChecker.version());
         if (toolChecker instanceof DockerChecker c && !c.isRunning()) {
-          System.out.println("  Docker is installed but not running.");
+          logger.warn("  Docker is installed but not running.");
         }
       } else {
-        System.out.println("  Not installed. " + toolChecker.installInstructions());
+        logger.info("  Not installed. {}", toolChecker.installInstructions());
       }
     });
   }
